@@ -29,6 +29,9 @@ class CA
     // navakcinuje procenta lidi 0,100 int, vakcinace u lidi neni implementovana
     // -- asi predelam na double
     void vaccinatePercentage(int N);
+    void vaccinatePercentageInit(double percentage, int spreadCoeff, std::vector<double>coeffs2set, std::vector<double>percentagePerCoeff);
+    void immunePercentageInit(double percentage, int spreadCoeff, std::vector<double>coeffs2set, std::vector<double>percentagePerCoeff);
+    void infectPercentageInit(double percentage, int spreadCoeff);
     
     // updatuje lidi do noveho kroku a pak necha kazdeho cloveka provest krok simulace
     // (nainfikovat lidi okolo)

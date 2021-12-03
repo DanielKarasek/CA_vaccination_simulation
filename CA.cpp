@@ -5,6 +5,30 @@
 #include "CA.hpp"
 #include "globals.hpp"
 
+bool checkVectorsLenght(std::vector<double> first, std::vector<double> second){
+  return (first.size() == second.size());
+}
+
+bool summs2one(std::vector<double> toCheck){
+  double tmp{};
+  for (auto val : toCheck){
+    tmp+=val;
+  }
+
+  return (tmp>0.98 &&  tmp<1.02);
+}
+
+std::vector<int> getShuffledVector(int desiredSize){
+  std::vector<int> v(desiredSize);
+
+  for (size_t i = 0; i < v.size(); ++i)
+      v[i] = i;
+
+  std::shuffle(v.begin(), v.end(), mt);
+  return v;
+}
+
+
 CA::CA(int size): m_size(size){
   // vytvoreni pole
   m_data.resize(size);
@@ -57,6 +81,84 @@ void CA::step(bool verbose){
   }
   if (verbose){
     std::cout << *this;
+  }
+}
+
+
+void CA::vaccinatePercentageInit(double percentage, int spreadCoeff, std::vector<double>coeffs2set, std::vector<double>percentagePerCoeff){
+  if (!checkVectorsLenght(coeffs2set,percentagePerCoeff)||!summs2one(percentagePerCoeff)){
+    std::cout << "Vektor koeficientu a procent nemaji stejnou velikost, nebo procenta nescitaji do 1" << std::endl;
+    return;
+  }
+  int totalPeople = m_size*m_size;
+  int normalSTD = 0.05;
+  
+  std::vector<int> v = getShuffledVector(totalPeople);
+  
+  int count2vaccinate{};
+  int rand_idx, rand_idx_first, rand_idx_second;
+  for (int coefCounter=0; coefCounter < coeffs2set.size(); coefCounter++){
+    count2vaccinate = totalPeople*percentage*percentagePerCoeff[coefCounter];
+    if (spreadCoeff != 0)
+      count2vaccinate /= spreadCoeff;
+    for (int i=0;i<count2vaccinate;i++){
+      rand_idx = v[i];
+      rand_idx_first = rand_idx / m_size;
+      rand_idx_second = rand_idx % m_size;
+      m_data[rand_idx_first][rand_idx_second].setVaccinCoef(coeffs2set[coefCounter]+normalDis(mt)*normalSTD);
+      if (spreadCoeff != 0)
+        m_data[rand_idx_first][rand_idx_second].spreadVaccine2Neighours(spreadCoeff);
+    }
+  }
+}
+
+void CA::immunePercentageInit(double percentage, int spreadCoeff, std::vector<double>coeffs2set, std::vector<double>percentagePerCoeff){
+  if (!checkVectorsLenght(coeffs2set, percentagePerCoeff)||!summs2one(percentagePerCoeff)){
+    std::cout << "Vektor koeficientu a procent nemaji stejnou velikost, nebo procenta nescitaji do 1" << std::endl;
+    return;
+  }
+  int totalPeople = m_size*m_size;
+  int normalSTD = 0.05;
+  
+  std::vector<int> v = getShuffledVector(totalPeople);
+
+  int count2immune{};
+  int rand_idx, rand_idx_first, rand_idx_second;
+  for (int coefCounter=0; coefCounter < coeffs2set.size(); coefCounter++){
+    count2immune = totalPeople*percentage*percentagePerCoeff[coefCounter];
+    if (spreadCoeff != 0)
+      count2immune /= spreadCoeff;
+
+    for (int i=0;i<count2immune;i++){
+      rand_idx = v[i];
+      rand_idx_first = rand_idx / m_size;
+      rand_idx_second = rand_idx % m_size;
+      m_data[rand_idx_first][rand_idx_second].setImmunCoef(coeffs2set[coefCounter]+normalDis(mt)*normalSTD);
+      if (spreadCoeff != 0)
+        m_data[rand_idx_first][rand_idx_second].spreadImmun2Neighbours(spreadCoeff);
+    }
+  }
+}
+
+void CA::infectPercentageInit(double percentage, int spreadCoeff){
+  int totalPeople = m_size*m_size;
+  int normalSTD = 0.1;
+  
+  std::vector<int> v(getShuffledVector(totalPeople));
+
+  int count2infect = totalPeople*percentage;
+  if (spreadCoeff != 0)
+      count2infect /= spreadCoeff;
+
+  int rand_idx, rand_idx_first, rand_idx_second;
+  
+  for (int i=0;i<count2infect;i++){
+    rand_idx = v[i];
+    rand_idx_first = rand_idx / m_size;
+    rand_idx_second = rand_idx % m_size;
+    m_data[rand_idx_first][rand_idx_second].infect();
+    if (spreadCoeff != 0)
+      m_data[rand_idx_first][rand_idx_second].spreadInfection2NeigboursGuaranted(spreadCoeff);
   }
 }
 
@@ -123,3 +225,5 @@ std::ostream& operator<<(std::ostream& os, const CA& automat)
     }
     return os;
 }
+
+

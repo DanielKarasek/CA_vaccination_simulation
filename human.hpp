@@ -17,6 +17,8 @@ class Human
     // Soucasny a dalsi stav + seznam sousedu
     HumanState m_currentState{Healthy};
     HumanState m_nextState{Healthy};
+    double m_vaccinationCoef{};
+    double m_immunityCoef{};
     std::vector<Human *> m_neighbours{};
     
     // Pridani do seznamu sousedu, bez zpetne vazby
@@ -38,6 +40,8 @@ class Human
     void step();
     
 
+    bool isIll();
+    bool isInfectable();
 
     // pokus nakazeni sama sebe, exposureCoef muze snizit sanci nakazeni
     // neni doresena implementace (hodnoty, a jak dle vakcinace)
@@ -47,13 +51,23 @@ class Human
     // Pridani do seznamu sousedu, ten si nas prida zpatky
     void addNeighbourBidirectional(Human *newNeighbour);
 
-    
     // Navakcinuj cloveka -- zatim neimplementovano vubec
     void vaccinate(){};
+
     // Infikuje - uzito pri inicializaci automatu
     void infect(){if (!(this->m_currentState==Dead)) this->m_nextState=Ill;}
     // Zabije - uzito pri inicializaci automatu
     void kill(){this->m_nextState=Dead;}
+    void setImmunCoef(double newCoef){m_immunityCoef = newCoef;std::cout<<"nastavuji immunitu na: "<<newCoef <<std::endl;}
+    void setVaccinCoef(double newCoef){m_vaccinationCoef = newCoef;std::cout<<"nastavuji vakcinaci na: "<<newCoef <<std::endl;}
+
+    double getImmunCoef(){return m_immunityCoef;}
+    double getVaccinCoef(){return m_vaccinationCoef;}
+
+    // funkce uccine 100% nakazi/immunuje/vakcinuje count v okoli
+    void spreadImmun2Neighbours(int count);
+    void spreadVaccine2Neighours(int count);
+    void spreadInfection2NeigboursGuaranted(int count);
     
   friend std::ostream& operator<<(std::ostream& os, const Human& human);
 };
