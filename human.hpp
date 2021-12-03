@@ -40,7 +40,9 @@ class Human
     void step();
     
 
-    bool isIll();
+    bool isIll(){return m_currentState==Ill;}
+    bool willBeIll(){return m_nextState==Ill;}
+    bool isDead(){return m_nextState==Dead;}
     bool isInfectable();
 
     // pokus nakazeni sama sebe, exposureCoef muze snizit sanci nakazeni

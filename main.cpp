@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
   CA automat{10};
   // Infikuju random 50 procent lidi, na kazdy zdroj budou tri jeho sousedi
   // navakcinuj 12 procenta lidi a kazdy pak necha navakcinovat 3 kamose
-  automat.infectPercentageInit(0.2, 3);
+  automat.infectPercentageInit(0.5, 3);
   // Navakcinuj random 10 procent lidi, na kazdy zdroj budou 2 sousedi  ==>
   // navakcinuj 3.3 procenta lidi a kazdy pak necha navakcinovat 2 kamose
   //- sila vaccinace == 0.8 pro 0.3 poctu vakcinovanych a 0.1 pro 0.7 poctu vakcinovanych
@@ -24,5 +24,16 @@ int main(int argc, char *argv[])
   for (int i=0;i<10;i++){
     automat.step(true);
   }
+  std::cout << "Death counts:\n"; 
+  for (auto val:DeathCounter){
+    std::cout << val << " ";
+  }
+  std::cout << std::endl;
+
+  std::cout << "Infected counts:\n";
+  for (auto val:InfectedCounter){
+    std::cout << val << " ";
+  }
+  std::cout << std::endl;
   return 0;
 }

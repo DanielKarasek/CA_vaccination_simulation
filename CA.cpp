@@ -82,6 +82,21 @@ void CA::step(bool verbose){
   if (verbose){
     std::cout << *this;
   }
+  this->gatherStatistics();
+}
+
+void CA::gatherStatistics(){
+  int ill{}, dead{};
+  for (auto &data_row: m_data){
+    for (auto &human: data_row){
+      if (human.isIll())
+        ill++;
+      if (human.isDead())
+        dead++;
+    }
+  }
+  InfectedCounter.push_back(ill);
+  DeathCounter.push_back(dead);
 }
 
 
@@ -105,7 +120,7 @@ void CA::vaccinatePercentageInit(double percentage, int spreadCoeff, std::vector
       rand_idx = v[i];
       rand_idx_first = rand_idx / m_size;
       rand_idx_second = rand_idx % m_size;
-      m_data[rand_idx_first][rand_idx_second].setVaccinCoef(coeffs2set[coefCounter]+normalDis(mt)*normalSTD);
+      m_data[rand_idx_first][rand_idx_second].setVaccinCoef(coeffs2set[coefCounter]+NormalDis(mt)*normalSTD);
       if (spreadCoeff != 0)
         m_data[rand_idx_first][rand_idx_second].spreadVaccine2Neighours(spreadCoeff);
     }
@@ -133,7 +148,7 @@ void CA::immunePercentageInit(double percentage, int spreadCoeff, std::vector<do
       rand_idx = v[i];
       rand_idx_first = rand_idx / m_size;
       rand_idx_second = rand_idx % m_size;
-      m_data[rand_idx_first][rand_idx_second].setImmunCoef(coeffs2set[coefCounter]+normalDis(mt)*normalSTD);
+      m_data[rand_idx_first][rand_idx_second].setImmunCoef(coeffs2set[coefCounter]+NormalDis(mt)*normalSTD);
       if (spreadCoeff != 0)
         m_data[rand_idx_first][rand_idx_second].spreadImmun2Neighbours(spreadCoeff);
     }
@@ -202,7 +217,7 @@ void CA::vaccinateNrandom(int N){
   // ze zamichaneho vektoru vyberu N prvnich
   for (int i=0;i<N;i++){
     rand_idx = v[i];
-    rand_idx = dis_int(mt) % size_squared;
+    rand_idx = IntegerDis(mt) % size_squared;
     rand_idx_first = rand_idx / m_size;
     rand_idx_second = rand_idx % m_size;
     m_data[rand_idx_first][rand_idx_second].vaccinate();

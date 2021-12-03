@@ -14,7 +14,7 @@ void Human::step()
     m_nextState = Healthy;
     for (auto human : this->m_neighbours)
       human->tryInfect(1); 
-    if (dis(mt) < mortality)
+    if (PercentageDis(mt) < mortality)
       m_nextState = Dead;
   }
 }
@@ -42,7 +42,7 @@ void Human::spreadImmun2Neighbours(int count)
   {
     if (human->getImmunCoef() == 0)
     {
-      human->setImmunCoef(m_immunityCoef+normalDis(mt)*normalSTD);
+      human->setImmunCoef(m_immunityCoef+NormalDis(mt)*normalSTD);
       countSpread++;
       if (countSpread == count)
         break;
@@ -57,7 +57,7 @@ void Human::spreadVaccine2Neighours(int count)
   {
     if (human->getVaccinCoef() == 0)
     {
-      human->setVaccinCoef(m_vaccinationCoef+normalDis(mt)*normalSTD);
+      human->setVaccinCoef(m_vaccinationCoef+NormalDis(mt)*normalSTD);
       countSpread++;
       if (countSpread == count)
         break;
@@ -68,20 +68,16 @@ void Human::spreadVaccine2Neighours(int count)
 void Human::tryInfect(double exposureCoef)
 {
   if (this->isInfectable() &&
-      dis(mt) < exposureCoef*(1-m_vaccinationCoef)*(1-m_immunityCoef)){
+      PercentageDis(mt) < exposureCoef*(1-m_vaccinationCoef)*(1-m_immunityCoef)){
     m_nextState = Ill;
     m_immunityCoef = 0.8;
   }
 }
 
-bool Human::isIll()
-{
-  return m_currentState == Ill;
-}
 
 bool Human::isInfectable()
 {
-  return !(this->isIll() || m_currentState == Dead || m_nextState == Dead);
+  return !(this->isIll() || this->isDead());
 }
 
 void Human::addNeighbourBidirectional(Human *newNeighbour)

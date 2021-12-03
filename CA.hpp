@@ -36,6 +36,7 @@ class CA
     // updatuje lidi do noveho kroku a pak necha kazdeho cloveka provest krok simulace
     // (nainfikovat lidi okolo)
     void step(bool verbose);
+    void gatherStatistics();
     
     friend std::ostream& operator<<(std::ostream& os, const CA& automat);
 };
