@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include "CA.hpp"
 #include "globals.hpp"
 
@@ -30,26 +31,35 @@ int main(int argc, char *argv[])
   CA automat{n};
   // Infikuju random 50 procent lidi, na kazdy zdroj budou tri jeho sousedi
   // navakcinuj 12 procenta lidi a kazdy pak necha navakcinovat 3 kamose
-  automat.infectPercentageInit(0.1, 3);
+  automat.infectPercentageInit(0.01, 2);
   // Navakcinuj random 10 procent lidi, na kazdy zdroj budou 2 sousedi  ==>
   // navakcinuj 3.3 procenta lidi a kazdy pak necha navakcinovat 2 kamose
   //- sila vaccinace == 0.8 pro 0.3 poctu vakcinovanych a 0.1 pro 0.7 poctu vakcinovanych
-  automat.vaccinatePercentageInit(0.1, 2, {0.8,0.1}, {0.3,0.7});
+  automat.vaccinatePercentageInit(1, 2, {0.9,0.3}, {0.4,0.6});
   //stejna semantika jako ^^
-  automat.immunePercentageInit(0.1, 2, {0.8,0.1}, {0.3,0.7});
+  automat.immunePercentageInit(0.1, 1, {0.8,0.1}, {0.3,0.7});
 
   bool run = false;
 
   do{
     //___________________________________________________________________________________________
     // toto si umi simulovat tri kroky, muzes vypnout verbose na false a std::cout automat smazat
-    std::cout << automat;
+    if (printable){
+      std::cout << automat;
+    }
     for (unsigned int i=0;i<g;i++){
       automat.step(printable);
     }
     //_____________________________________________________________________________________________
     // zakladni dve statistiky vypsane na stdout
+    ofstream myfile;
+    myfile.open ("statistica.txt");
+
     std::cout << "Death counts:\n"; 
+    for(unsigned int i = 0; i < DeathCounter.size() && i < InfectedCounter.size(); i++)
+    {
+      myfile << DeathCounter[i] << " " << InfectedCounter[i] << endl;
+    }
     for (auto val:DeathCounter){
       std::cout << val << " ";
     }
@@ -73,6 +83,7 @@ int main(int argc, char *argv[])
     {
       run = false;
     }
+    myfile.close();
   }while(run);
   
   //___________________________________________________________________________________________

@@ -1,7 +1,7 @@
 #include <random>
 #include "globals.hpp"
 
-double Mortality = 0.10;
+double Mortality = 0.02;
 
 double VaccineDecayInfection   = 0.9;
 double ImmunityDecayInfection  = 0.9;
