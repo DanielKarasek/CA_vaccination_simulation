@@ -112,6 +112,7 @@ void CA::vaccinatePercentageInit(double percentage, int spreadCoeff, std::vector
   
   int count2vaccinate{};
   int rand_idx, rand_idx_first, rand_idx_second;
+  int extra2spread{};
   for (int coefCounter=0; coefCounter < coeffs2set.size(); coefCounter++){
     count2vaccinate = totalPeople*percentage*percentagePerCoeff[coefCounter];
     if (spreadCoeff != 0)
@@ -120,9 +121,27 @@ void CA::vaccinatePercentageInit(double percentage, int spreadCoeff, std::vector
       rand_idx = v[i];
       rand_idx_first = rand_idx / m_size;
       rand_idx_second = rand_idx % m_size;
-      m_data[rand_idx_first][rand_idx_second].setVaccinCoef(coeffs2set[coefCounter]+NormalDis(mt)*normalSTD);
-      if (spreadCoeff != 0)
-        m_data[rand_idx_first][rand_idx_second].spreadVaccine2Neighours(spreadCoeff);
+      m_data[rand_idx_first][rand_idx_second].setVaccinCoefs(coeffs2set[coefCounter]+NormalDis(mt)*normalSTD);
+    }
+
+    // rozsir na okoli
+    if (spreadCoeff != 0){
+      for (int i=0;i<count2vaccinate;i++){
+        rand_idx = v[i];
+        rand_idx_first = rand_idx / m_size;
+        rand_idx_second = rand_idx % m_size;
+        extra2spread += m_data[rand_idx_first][rand_idx_second].spreadVaccine2Neighours(spreadCoeff);
+      }
+    
+    // rozsir na okoli ostatnich pokud se to nekde nepovedlo
+      for (int i=0;i<count2vaccinate;i++){
+        rand_idx = v[i];
+        rand_idx_first = rand_idx / m_size;
+        rand_idx_second = rand_idx % m_size;
+        if (extra2spread == 0)
+          break;
+        extra2spread = m_data[rand_idx_first][rand_idx_second].spreadVaccine2Neighours(extra2spread);
+      }
     }
   }
 }
@@ -139,6 +158,7 @@ void CA::immunePercentageInit(double percentage, int spreadCoeff, std::vector<do
 
   int count2immune{};
   int rand_idx, rand_idx_first, rand_idx_second;
+  int extra2spread{};
   for (int coefCounter=0; coefCounter < coeffs2set.size(); coefCounter++){
     count2immune = totalPeople*percentage*percentagePerCoeff[coefCounter];
     if (spreadCoeff != 0)
@@ -148,11 +168,29 @@ void CA::immunePercentageInit(double percentage, int spreadCoeff, std::vector<do
       rand_idx = v[i];
       rand_idx_first = rand_idx / m_size;
       rand_idx_second = rand_idx % m_size;
-      m_data[rand_idx_first][rand_idx_second].setImmunCoef(coeffs2set[coefCounter]+NormalDis(mt)*normalSTD);
-      if (spreadCoeff != 0)
-        m_data[rand_idx_first][rand_idx_second].spreadImmun2Neighbours(spreadCoeff);
+      m_data[rand_idx_first][rand_idx_second].setImmunCoefs(coeffs2set[coefCounter]+NormalDis(mt)*normalSTD);
+    }
+    // rozsir na okoli
+    if (spreadCoeff != 0){
+      for (int i=0;i<count2immune;i++){
+        rand_idx = v[i];
+        rand_idx_first = rand_idx / m_size;
+        rand_idx_second = rand_idx % m_size;
+        extra2spread += m_data[rand_idx_first][rand_idx_second].spreadImmun2Neighbours(spreadCoeff);
+      }
+    // rozsir na okoli ostatnich pokud se to nekde nepovedlo
+      for (int i=0;i<count2immune;i++){
+        rand_idx = v[i];
+        rand_idx_first = rand_idx / m_size;
+        rand_idx_second = rand_idx % m_size;
+        if (extra2spread == 0)
+          break;
+        extra2spread = m_data[rand_idx_first][rand_idx_second].spreadImmun2Neighbours(extra2spread);
+      }
     }
   }
+
+  
 }
 
 void CA::infectPercentageInit(double percentage, int spreadCoeff){
@@ -163,17 +201,35 @@ void CA::infectPercentageInit(double percentage, int spreadCoeff){
 
   int count2infect = totalPeople*percentage;
   if (spreadCoeff != 0)
-      count2infect /= spreadCoeff;
+      count2infect /= (spreadCoeff+1);
 
   int rand_idx, rand_idx_first, rand_idx_second;
-  
+  int extra2spread{};
   for (int i=0;i<count2infect;i++){
     rand_idx = v[i];
     rand_idx_first = rand_idx / m_size;
     rand_idx_second = rand_idx % m_size;
     m_data[rand_idx_first][rand_idx_second].infect();
-    if (spreadCoeff != 0)
-      m_data[rand_idx_first][rand_idx_second].spreadInfection2NeigboursGuaranted(spreadCoeff);
+  }
+
+  if (spreadCoeff != 0){
+    // rozsir na okoli
+    for (int i=0;i<count2infect;i++){
+      rand_idx = v[i];
+      rand_idx_first = rand_idx / m_size;
+      rand_idx_second = rand_idx % m_size;
+      extra2spread += m_data[rand_idx_first][rand_idx_second].spreadInfection2NeigboursGuaranted(spreadCoeff);
+    }
+  
+    // rozsir na okoli ostatnich pokud se to nekde nepovedlo
+    for (int i=0;i<count2infect;i++){
+      rand_idx = v[i];
+      rand_idx_first = rand_idx / m_size;
+      rand_idx_second = rand_idx % m_size;
+      if (extra2spread == 0)
+        break;
+      extra2spread = m_data[rand_idx_first][rand_idx_second].spreadInfection2NeigboursGuaranted(extra2spread);
+    }
   }
 }
 

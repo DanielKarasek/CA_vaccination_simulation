@@ -4,7 +4,30 @@
 #include <vector>
 
 //globalni promenne automatu
-extern double mortality;
+extern double Mortality;
+
+extern double VaccineDecayInfection;
+extern double ImmunityDecayInfection;
+extern double VaccineDecayMortality;
+extern double ImmunityDecayMortality; 
+
+extern double VaccineLinearDecayInfection;
+extern double ImmunityLinearDecayInfection;
+extern double VaccineLinearDecayMortality;
+extern double ImmunityLinearDecayMortality;
+
+extern double VaccineLinearInfectionThreshold;
+extern double ImmunityLinearInfectionThreshold;
+extern double VaccineLinearMortalityThreshold;
+extern double ImmunityLinearMortalityThreshold;
+
+extern double VaccineStartInfection;
+extern double ImmunityStartInfection;
+extern double VaccineStartMortality;
+extern double ImmunityStartMortality;
+
+extern double VaccineStartSTD;
+extern double ImmunityStartSTD;
 
 //globalni statistiky
 extern std::vector<int> DeathCounter;

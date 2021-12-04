@@ -2,6 +2,11 @@
 #include "human.hpp"
 #include "globals.hpp"
 
+
+double clip(double n, double lower, double upper) {
+  return std::max(lower, std::min(n, upper));
+}
+
 Human::Human(const Human& orig){
   this->m_currentState = orig.m_currentState;
   this->m_neighbours = orig.m_neighbours;
@@ -14,17 +19,113 @@ void Human::step()
     m_nextState = Healthy;
     for (auto human : this->m_neighbours)
       human->tryInfect(1); 
-    if (PercentageDis(mt) < mortality)
+    if (PercentageDis(mt) < Mortality*(1-m_immunityMortalityCoef)*(1-m_vaccinationMortalityCoef))
       m_nextState = Dead;
   }
+  decayDefense();
 }
-void Human::spreadInfection2NeigboursGuaranted(int count)
+
+void Human::setImmunCoefs(double newCoef){
+  newCoef = clip(newCoef, 0.01, 1);
+  m_immunityInfectionCoef = newCoef;
+  int count{};
+  if (newCoef > ImmunityLinearInfectionThreshold){
+    count = ceil((newCoef - ImmunityStartInfection)/ImmunityLinearDecayInfection);
+  }
+  else{
+    count = ceil((ImmunityStartInfection - ImmunityLinearInfectionThreshold)/ImmunityLinearDecayInfection);
+    count += ceil(log(newCoef/ImmunityLinearInfectionThreshold)/log(ImmunityDecayInfection));
+  }
+  m_immunityMortalityCoef = ImmunityStartMortality;
+  for (; count>0;count--)
+    decayImmunityMortality();
+}
+
+void Human::setVaccinCoefs(double newCoef){
+  newCoef = clip(newCoef, 0.01, 1);
+  m_vaccinationInfectionCoef = newCoef;
+  int count{};
+  if (newCoef > VaccineLinearInfectionThreshold){
+    count = ceil((newCoef - VaccineStartInfection)/VaccineLinearDecayInfection);
+  }
+  else{
+    count = ceil((VaccineStartInfection - VaccineLinearInfectionThreshold)/VaccineLinearDecayInfection);
+    count += ceil(log(newCoef/VaccineLinearInfectionThreshold)/log(VaccineDecayInfection));
+  }
+  m_vaccinationMortalityCoef = VaccineStartMortality;
+  for (; count>0;count--)
+    decayVaccinationMortality();
+}
+
+
+void Human::tryInfect(double exposureCoef)
+{
+  if (this->isInfectable() &&
+      PercentageDis(mt) < exposureCoef*(1-m_vaccinationInfectionCoef)*(1-m_immunityInfectionCoef)){
+    m_nextState = Ill;
+    m_immunityInfectionCoef = ImmunityStartInfection + NormalDis(mt) * ImmunityStartSTD;
+    m_immunityMortalityCoef = ImmunityStartMortality + NormalDis(mt) * ImmunityStartSTD;
+  }
+}
+
+void Human::vaccinate(){
+  m_vaccinationInfectionCoef = VaccineStartInfection + NormalDis(mt) * VaccineStartSTD;
+  m_vaccinationMortalityCoef = VaccineStartMortality + NormalDis(mt) * VaccineStartSTD;
+}
+
+
+
+void Human::addNeighbourBidirectional(Human *newNeighbour)
+{
+  m_neighbours.push_back(newNeighbour);
+  newNeighbour->addNeighbourUnidirection(this);
+}
+
+bool Human::isInfectable()
+{
+  return !(this->isIll() || this->isDead());
+}
+
+
+void Human::decayDefense(){
+  this->decayVaccinationInfecion();
+  this->decayVaccinationMortality();
+  this->decayImmunityInfecion();
+  this->decayImmunityMortality();
+}
+
+void Human::decayVaccinationInfecion(){
+  if (m_vaccinationInfectionCoef > VaccineLinearInfectionThreshold)
+    m_vaccinationInfectionCoef -= VaccineLinearDecayInfection;
+  else 
+    m_vaccinationInfectionCoef *= VaccineDecayInfection;
+}
+void Human::decayVaccinationMortality(){
+  if (m_vaccinationMortalityCoef > VaccineLinearMortalityThreshold)
+    m_vaccinationMortalityCoef -= VaccineLinearDecayMortality;
+  else 
+    m_vaccinationMortalityCoef *= VaccineDecayMortality;
+}
+void Human::decayImmunityInfecion(){
+  if (m_immunityInfectionCoef > ImmunityLinearInfectionThreshold)
+    m_immunityInfectionCoef -= ImmunityLinearDecayInfection;
+  else 
+    m_immunityInfectionCoef *= ImmunityDecayInfection;
+}
+void Human::decayImmunityMortality(){  
+  if (m_immunityMortalityCoef > ImmunityLinearMortalityThreshold)
+    m_immunityMortalityCoef -= ImmunityLinearDecayMortality;
+  else 
+    m_immunityMortalityCoef *= ImmunityDecayMortality;
+}
+
+int Human::spreadInfection2NeigboursGuaranted(int count)
 {
   int countSpread{};
   double normalSTD = 0.1;
   for (auto human : m_neighbours)
   {
-    if (!human->isIll() || !(human->m_nextState ==Ill))
+    if (!human->isIll() && !(human->m_nextState == Ill))
     {
       human->infect();
       countSpread++;
@@ -32,59 +133,42 @@ void Human::spreadInfection2NeigboursGuaranted(int count)
         break;
     }
   }
+  return count - countSpread;
 }
 
-void Human::spreadImmun2Neighbours(int count)
+int Human::spreadImmun2Neighbours(int count)
 {
   int countSpread{};
   double normalSTD = 0.05;
   for (auto human : m_neighbours)
   {
-    if (human->getImmunCoef() == 0)
+    if (human->getImmunInfectionCoef() == 0)
     {
-      human->setImmunCoef(m_immunityCoef+NormalDis(mt)*normalSTD);
+      human->setImmunCoefs(m_immunityInfectionCoef+NormalDis(mt)*normalSTD);
       countSpread++;
       if (countSpread == count)
         break;
     }
   }
+  return count - countSpread;
 }
-void Human::spreadVaccine2Neighours(int count)
+int Human::spreadVaccine2Neighours(int count)
 {
   int countSpread{};
   double normalSTD = 0.05;
   for (auto human : m_neighbours)
   {
-    if (human->getVaccinCoef() == 0)
+    if (human->getVaccinInfectionCoef() == 0)
     {
-      human->setVaccinCoef(m_vaccinationCoef+NormalDis(mt)*normalSTD);
+      human->setVaccinCoefs(m_vaccinationInfectionCoef+NormalDis(mt)*normalSTD);
       countSpread++;
       if (countSpread == count)
         break;
     }
   }
+  return count - countSpread;
 }
 
-void Human::tryInfect(double exposureCoef)
-{
-  if (this->isInfectable() &&
-      PercentageDis(mt) < exposureCoef*(1-m_vaccinationCoef)*(1-m_immunityCoef)){
-    m_nextState = Ill;
-    m_immunityCoef = 0.8;
-  }
-}
-
-
-bool Human::isInfectable()
-{
-  return !(this->isIll() || this->isDead());
-}
-
-void Human::addNeighbourBidirectional(Human *newNeighbour)
-{
-  m_neighbours.push_back(newNeighbour);
-  newNeighbour->addNeighbourUnidirection(this);
-}
 
 std::ostream& operator<<(std::ostream& os, const Human& human){
   switch (human.m_currentState){
