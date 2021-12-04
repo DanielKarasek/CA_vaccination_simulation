@@ -35,9 +35,9 @@ int main(int argc, char *argv[])
   // Navakcinuj random 10 procent lidi, na kazdy zdroj budou 2 sousedi  ==>
   // navakcinuj 3.3 procenta lidi a kazdy pak necha navakcinovat 2 kamose
   //- sila vaccinace == 0.8 pro 0.3 poctu vakcinovanych a 0.1 pro 0.7 poctu vakcinovanych
-  automat.vaccinatePercentageInit(1, 2, {0.9,0.3}, {0.4,0.6});
+  automat.vaccinatePercentageInit(0.6, 3, {0.9,0.3}, {0.4,0.6});
   //stejna semantika jako ^^
-  automat.immunePercentageInit(0.1, 1, {0.8,0.1}, {0.3,0.7});
+  automat.immunePercentageInit(0.2, 1, {0.8,0.1}, {0.3,0.7});
 
   bool run = false;
 
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     // zakladni dve statistiky vypsane na stdout
     ofstream myfile;
     myfile.open ("statistica.txt");
-
+    myfile << "Deaths Infected" << endl;
     std::cout << "Death counts:\n"; 
     for(unsigned int i = 0; i < DeathCounter.size() && i < InfectedCounter.size(); i++)
     {
