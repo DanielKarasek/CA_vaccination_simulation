@@ -19,10 +19,15 @@ class Human
     // Soucasny a dalsi stav + seznam sousedu
     HumanState m_currentState{Healthy};
     HumanState m_nextState{Healthy};
+    
     double m_vaccinationInfectionCoef{};
     double m_immunityInfectionCoef{};
     double m_vaccinationMortalityCoef{};
     double m_immunityMortalityCoef{};
+
+
+    double m_contagiousnessCoeff{};
+
     std::vector<Human *> m_neighbours{};
     
     // Pridani do seznamu sousedu, bez zpetne vazby
@@ -67,7 +72,7 @@ class Human
     void vaccinate();
 
     // Infikuje - uzito pri inicializaci automatu
-    void infect(){if (!this->isDead()) this->m_nextState=Ill;}
+    void infect();
     // Zabije - uzito pri inicializaci automatu
     void kill(){this->m_nextState=Dead;}
 

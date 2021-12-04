@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm> 
-#include <vector>       
+#include <vector>    
+#include <cstdio>   
 
 #include "CA.hpp"
 #include "globals.hpp"
@@ -79,6 +80,7 @@ void CA::step(bool verbose){
       human.step();
     }
   }
+
   if (verbose){
     std::cout << *this;
   }
@@ -282,6 +284,26 @@ void CA::vaccinateNrandom(int N){
 
 void CA::vaccinatePercentage(int N){
   vaccinateNrandom(m_size*m_size*N/100);
+}
+
+void CA::printVaccinationMap(){
+  for (auto &human_row: m_data){
+    for (auto &human: human_row){
+      printf("%.2f ", human.getVaccinInfectionCoef());
+    }
+    printf("\n");
+  }
+  printf("_______________________________________\n");
+}
+
+void CA::printImmunityMap(){
+  for (auto &human_row: m_data){
+    for (auto &human: human_row){
+      printf("%.2f ", human.getImmunInfectionCoef());
+    }
+    printf("\n");
+  }
+  printf("_______________________________________\n");
 }
 
 std::ostream& operator<<(std::ostream& os, const CA& automat)

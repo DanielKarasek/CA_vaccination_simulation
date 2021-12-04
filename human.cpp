@@ -16,13 +16,22 @@ void Human::step()
 { 
   if (m_currentState == Ill)
   {
-    m_nextState = Healthy;
+    m_nextState = Healthy;    
     for (auto human : this->m_neighbours)
-      human->tryInfect(1); 
+      human->tryInfect(m_contagiousnessCoeff); 
     if (PercentageDis(mt) < Mortality*(1-m_immunityMortalityCoef)*(1-m_vaccinationMortalityCoef))
       m_nextState = Dead;
+
+    m_immunityInfectionCoef = ImmunityStartInfection + NormalDis(mt) * ImmunityStartSTD;
+    m_immunityMortalityCoef = ImmunityStartMortality + NormalDis(mt) * ImmunityStartSTD;
   }
+  double tmp_vacc = m_vaccinationInfectionCoef;
   decayDefense();
+  if (AutoRevaccinate &&
+      tmp_vacc>=RevaccinationInfectionBasedThreshold &&
+      m_vaccinationInfectionCoef<RevaccinationInfectionBasedThreshold){
+    this->vaccinate(); 
+  }
 }
 
 void Human::setImmunCoefs(double newCoef){
@@ -62,9 +71,7 @@ void Human::tryInfect(double exposureCoef)
 {
   if (this->isInfectable() &&
       PercentageDis(mt) < exposureCoef*(1-m_vaccinationInfectionCoef)*(1-m_immunityInfectionCoef)){
-    m_nextState = Ill;
-    m_immunityInfectionCoef = ImmunityStartInfection + NormalDis(mt) * ImmunityStartSTD;
-    m_immunityMortalityCoef = ImmunityStartMortality + NormalDis(mt) * ImmunityStartSTD;
+    this->infect();
   }
 }
 
@@ -73,7 +80,17 @@ void Human::vaccinate(){
   m_vaccinationMortalityCoef = VaccineStartMortality + NormalDis(mt) * VaccineStartSTD;
 }
 
-
+void Human::infect(){
+  if (!this->isDead()){
+    this->m_nextState=Ill;
+    if (PercentageDis(mt) < SuperSpreaderProb){
+      m_contagiousnessCoeff = Contagiousness * SuperSpreaderMultiCoef;
+    }
+    else{
+      m_contagiousnessCoeff = Contagiousness;
+    }
+  }
+}
 
 void Human::addNeighbourBidirectional(Human *newNeighbour)
 {

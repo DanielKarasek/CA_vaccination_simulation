@@ -29,6 +29,14 @@ extern double ImmunityStartMortality;
 extern double VaccineStartSTD;
 extern double ImmunityStartSTD;
 
+extern double RevaccinationInfectionBasedThreshold;
+extern bool AutoRevaccinate;
+
+extern double Contagiousness;
+extern double SuperSpreaderProb;
+extern double SuperSpreaderMultiCoef;
+
+
 //globalni statistiky
 extern std::vector<int> DeathCounter;
 extern std::vector<int> InfectedCounter;

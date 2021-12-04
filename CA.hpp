@@ -46,6 +46,8 @@ class CA
     // Nataha statistiky z CA do globalnich promennych
     void gatherStatistics();
     
+    void printImmunityMap();
+    void printVaccinationMap();
     friend std::ostream& operator<<(std::ostream& os, const CA& automat);
 };
 

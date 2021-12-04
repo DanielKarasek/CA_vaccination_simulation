@@ -25,6 +25,14 @@ double ImmunityStartMortality = 0.9;
 
 double VaccineStartSTD = 0.06;
 double ImmunityStartSTD = 0.06;
+
+double RevaccinationInfectionBasedThreshold = 0.5;
+bool AutoRevaccinate = true;
+
+double Contagiousness = 0.45;
+double SuperSpreaderProb = 0.1;
+double SuperSpreaderMultiCoef = 10;
+
 //Stats
 std::vector<int> DeathCounter{};
 std::vector<int> InfectedCounter{};
