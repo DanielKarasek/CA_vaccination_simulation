@@ -4,12 +4,14 @@
 #include <iostream>
 #include <vector>
 #include <random>
+#include <algorithm>
 
 #include "globals.hpp"
 
 // enum stavu tridy Human
 enum HumanState{Healthy, Ill, Dead};
 
+double clip(double n, double lower, double upper);
 
 class Human
 {
@@ -17,8 +19,10 @@ class Human
     // Soucasny a dalsi stav + seznam sousedu
     HumanState m_currentState{Healthy};
     HumanState m_nextState{Healthy};
-    double m_vaccinationCoef{};
-    double m_immunityCoef{};
+    double m_vaccinationInfectionCoef{};
+    double m_immunityInfectionCoef{};
+    double m_vaccinationMortalityCoef{};
+    double m_immunityMortalityCoef{};
     std::vector<Human *> m_neighbours{};
     
     // Pridani do seznamu sousedu, bez zpetne vazby
@@ -38,8 +42,14 @@ class Human
     // pak zkusime umrit
     // neni doimplementovano (spravne hodnoty, a jak se chovat dle vakcinace)
     void step();
+    // Decay funkce pro obranne slozky, aby sme nebyli imunni navzdy
+    void decayDefense();
+    void decayVaccinationInfecion();
+    void decayVaccinationMortality();
+    void decayImmunityInfecion();
+    void decayImmunityMortality();
     
-
+    // pomocne dotazy na stav, pro prehlednejsi kod
     bool isIll(){return m_currentState==Ill;}
     bool willBeIll(){return m_nextState==Ill;}
     bool isDead(){return m_nextState==Dead;}
@@ -54,22 +64,27 @@ class Human
     void addNeighbourBidirectional(Human *newNeighbour);
 
     // Navakcinuj cloveka -- zatim neimplementovano vubec
-    void vaccinate(){};
+    void vaccinate();
 
     // Infikuje - uzito pri inicializaci automatu
-    void infect(){if (!(this->m_currentState==Dead)) this->m_nextState=Ill;}
+    void infect(){if (!this->isDead()) this->m_nextState=Ill;}
     // Zabije - uzito pri inicializaci automatu
     void kill(){this->m_nextState=Dead;}
-    void setImmunCoef(double newCoef){m_immunityCoef = newCoef;std::cout<<"nastavuji immunitu na: "<<newCoef <<std::endl;}
-    void setVaccinCoef(double newCoef){m_vaccinationCoef = newCoef;std::cout<<"nastavuji vakcinaci na: "<<newCoef <<std::endl;}
 
-    double getImmunCoef(){return m_immunityCoef;}
-    double getVaccinCoef(){return m_vaccinationCoef;}
+    // Nastavi infekcni obranu na novy koeficient a odvodi obranu proti mortalite
+    void setImmunCoefs(double newCoef);
+    void setVaccinCoefs(double newCoef);
 
-    // funkce uccine 100% nakazi/immunuje/vakcinuje count v okoli
-    void spreadImmun2Neighbours(int count);
-    void spreadVaccine2Neighours(int count);
-    void spreadInfection2NeigboursGuaranted(int count);
+    //gettery
+    double getImmunInfectionCoef(){return m_immunityInfectionCoef;}
+    double getVaccinInfectionCoef(){return m_vaccinationInfectionCoef;}
+    double getImmunMortalityCoef(){return m_immunityMortalityCoef;}
+    double getVaccinMortalityCoef(){return m_vaccinationMortalityCoef;}
+
+    // funkce uccine 100% nakazi/immunuje/vakcinuje pocet:count v okoli
+    int spreadImmun2Neighbours(int count);
+    int spreadVaccine2Neighours(int count);
+    int spreadInfection2NeigboursGuaranted(int count);
     
   friend std::ostream& operator<<(std::ostream& os, const Human& human);
 };
