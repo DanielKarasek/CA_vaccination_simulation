@@ -17,7 +17,7 @@ class CA
   public:
     // Vytvori CA + zakladni propojeni lidi-Human class
     // (lidi si pamatuji kdo je jejich okoli a je jejich responsibilty je infikovat)
-    CA(int size);
+    CA(unsigned int size);
     // natvrdo nainfikuje N random lidi
     void infectNrandom(int N);
     // nainfikuje procenta lidi 0,100 int -- asi predelam na double

@@ -29,7 +29,7 @@ std::vector<int> getShuffledVector(int desiredSize){
 }
 
 
-CA::CA(int size): m_size(size){
+CA::CA(unsigned int size): m_size(size){
   // vytvoreni pole
   m_data.resize(size);
   for (auto &data_row: m_data){
