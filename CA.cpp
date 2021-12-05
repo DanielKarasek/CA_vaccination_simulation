@@ -2,33 +2,11 @@
 #include <algorithm> 
 #include <vector>    
 #include <cstdio>   
+#include <string>
 
 #include "CA.hpp"
 #include "globals.hpp"
-
-bool checkVectorsLenght(std::vector<double> first, std::vector<double> second){
-  return (first.size() == second.size());
-}
-
-bool summs2one(std::vector<double> toCheck){
-  double tmp{};
-  for (auto val : toCheck){
-    tmp+=val;
-  }
-
-  return (tmp>0.98 &&  tmp<1.02);
-}
-
-std::vector<int> getShuffledVector(int desiredSize){
-  std::vector<int> v(desiredSize);
-
-  for (size_t i = 0; i < v.size(); ++i)
-      v[i] = i;
-
-  std::shuffle(v.begin(), v.end(), mt);
-  return v;
-}
-
+#include "auxilary.hpp"
 
 CA::CA(unsigned int size): m_size(size){
   // vytvoreni pole
@@ -88,17 +66,22 @@ void CA::step(bool verbose){
 }
 
 void CA::gatherStatistics(){
-  int ill{}, dead{};
+  gatherSingleStat(InfectedCounter, "Ill");
+  gatherSingleStat(NoSymptomCounter, "NoSymptom");
+  gatherSingleStat(SymptomCounter, "Symptom");
+  gatherSingleStat(RiskCounter, "Risk");
+  gatherSingleStat(DeathCounter, "Dead"); 
+}
+
+void CA::gatherSingleStat(std::vector<int> &statVector, std::string stat2gather){
+  int counter{};
   for (auto &data_row: m_data){
     for (auto &human: data_row){
-      if (human.isIll())
-        ill++;
-      if (human.isDead())
-        dead++;
+      if (human.statGatherer(stat2gather))
+        counter++;
     }
   }
-  InfectedCounter.push_back(ill);
-  DeathCounter.push_back(dead);
+  statVector.push_back(counter);
 }
 
 

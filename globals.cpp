@@ -1,17 +1,23 @@
 #include <random>
 #include "globals.hpp"
 
+//typedefs
+
+
+//globalni promenne automatu
 double Mortality = 0.0075;
 
-double VaccineDecayInfection   = 0.92;
-double ImmunityDecayInfection  = 0.92;
-double VaccineDecayMortality   = 0.95;
-double ImmunityDecayMortality  = 0.95; 
+//tyhle upraveno treti odmocnina z puvodni hodnoty
+double VaccineDecayInfection   = 0.972588826;
+double ImmunityDecayInfection  = 0.972588826;
+double VaccineDecayMortality   = 0.983047572;
+double ImmunityDecayMortality  = 0.983047572; 
 
-double VaccineLinearDecayInfection  = 0.0258;
-double ImmunityLinearDecayInfection = 0.02;
-double VaccineLinearDecayMortality  = 0.0009;
-double ImmunityLinearDecayMortality = 0.0009;
+// tyhle vsechny podeleno tremi
+double VaccineLinearDecayInfection  = 0.0086;
+double ImmunityLinearDecayInfection = 0.0066;
+double VaccineLinearDecayMortality  = 0.0003;
+double ImmunityLinearDecayMortality = 0.0003;
 
 double VaccineLinearInfectionThreshold   = 0.7;
 double ImmunityLinearInfectionThreshold  = 0.7;
@@ -28,15 +34,22 @@ double ImmunityStartSTD = 0.07;
 
 double RevaccinationInfectionBasedThreshold = 0.5;
 bool AutoRevaccinate = true;
-double RevaccinationSpeed = 0.8; // if 1, vaccination comes instantly, if 0, vaccination does not come ever, 0.5 is 50 % chance during step
+//podeleno tremi
+double RevaccinationSpeed = 0.26; // if 1, vaccination comes instantly, if 0, vaccination does not come ever, 0.5 is 50 % chance during step 
 
 double Contagiousness = 0.31;
 double SuperSpreaderProb = 0.35;
 double SuperSpreaderMultiCoef = 10;
 
+
+std::vector<double> ContagiousnessByState{0.6, 0.3, 0.1};
+
 //Stats
 std::vector<int> DeathCounter{};
 std::vector<int> InfectedCounter{};
+std::vector<int> NoSymptomCounter{};
+std::vector<int> SymptomCounter{};
+std::vector<int> RiskCounter{};
 
 //Random generators
 std::random_device rd;

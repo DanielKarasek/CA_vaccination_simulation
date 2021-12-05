@@ -3,14 +3,15 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 
 #include "human.hpp"
 #include "globals.hpp"
 
 typedef std::vector<std::vector<Human>> HumanArr;
-
 class CA 
 {
+
   protected:
     int m_size;
     HumanArr m_data;
@@ -45,6 +46,7 @@ class CA
     void step(bool verbose);
     // Nataha statistiky z CA do globalnich promennych
     void gatherStatistics();
+    void gatherSingleStat(std::vector<int> &statVector, std::string stat2gather);
     
     void printImmunityMap();
     void printVaccinationMap();

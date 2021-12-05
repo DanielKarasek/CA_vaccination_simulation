@@ -2,11 +2,13 @@
 #include <fstream>
 #include "CA.hpp"
 #include "globals.hpp"
+#include "auxilary.hpp"
+
 void testDan(){
   CA automat{10};
   // Infikuju random 50 procent lidi, na kazdy zdroj budou tri jeho sousedi ==>
   // prubeh fce: navakcinuj 12 procenta lidi jako zdroje a kazdy pak necha navakcinovat 3 kamose
-  automat.infectPercentageInit(0.03, 2);
+  automat.infectPercentageInit(0.3, 2);
   // Navakcinuj random 10 procent lidi, na kazdy zdroj budou 2 sousedi  ==>
   // navakcinuj 3.3 procenta lidi a kazdy pak necha navakcinovat 2 kamose
   //- sila vaccinace == 0.8 pro 0.3 poctu vakcinovanych a 0.1 pro 0.7 poctu vakcinovanych
@@ -15,20 +17,11 @@ void testDan(){
   automat.immunePercentageInit(0.2, 1, {0.8,0.1}, {0.3,0.7});
 
   //std::cout << automat; 
-  for (unsigned int i=0;i<100;i++){
+  for (unsigned int i=0;i<20;i++){
     automat.step(false);
-    automat.printVaccinationMap();
   }
-  for (auto val:InfectedCounter){
-    std::cout << val << " ";
-  }
-  std::cout << std::endl;
-  for (auto val:DeathCounter){
-    std::cout << val << " ";
-  }
-  std::cout << std::endl;
+  printStats(std::cout);
 }
-
 
 int main(int argc, char *argv[])
 {

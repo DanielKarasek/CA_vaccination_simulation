@@ -37,10 +37,15 @@ extern double Contagiousness;
 extern double SuperSpreaderProb;
 extern double SuperSpreaderMultiCoef;
 
+extern std::vector<double> ContagiousnessByState;
+
 
 //globalni statistiky
 extern std::vector<int> DeathCounter;
 extern std::vector<int> InfectedCounter;
+extern std::vector<int> NoSymptomCounter;
+extern std::vector<int> SymptomCounter;
+extern std::vector<int> RiskCounter;
 
 //random generatory
 extern std::mt19937 mt;

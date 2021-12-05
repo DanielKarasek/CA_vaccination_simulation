@@ -5,16 +5,18 @@
 #include <vector>
 #include <random>
 #include <algorithm>
+#include <string>
 
 #include "globals.hpp"
 
-// enum stavu tridy Human
-enum HumanState{Healthy, Ill, Dead};
+// enum stavu tridy Human -- přidat 2 stavy, EarlyIll, Symptomatic, HardCovRisk
+enum HumanState{Healthy, Ill, Symptomatic, HardCovRisk, Dead};
 
-double clip(double n, double lower, double upper);
 
 class Human
 {
+
+  
   protected:
     // Soucasny a dalsi stav + seznam sousedu
     HumanState m_currentState{Healthy};
@@ -37,16 +39,15 @@ class Human
     Human(){}
     Human(const Human& orig);
 
-  
-    void update_state()
-    {
-      m_currentState = m_nextState;
-    }
+    void update_state(){m_currentState = m_nextState;}
 
     // pokud sme nemocni tak nejdriv pokusime nakazit sousedy
     // pak zkusime umrit
     // neni doimplementovano (spravne hodnoty, a jak se chovat dle vakcinace)
     void step();
+    void infectedStep(HumanState nextState, double contagiousnessRatio);
+    void autoRevactination();
+
     // Decay funkce pro obranne slozky, aby sme nebyli imunni navzdy
     void decayDefense();
     void decayVaccinationInfecion();
@@ -55,10 +56,15 @@ class Human
     void decayImmunityMortality();
     
     // pomocne dotazy na stav, pro prehlednejsi kod
-    bool isIll(){return m_currentState==Ill;}
+    bool isIll(){return (m_currentState==Ill||m_currentState==Symptomatic||m_currentState==HardCovRisk);}
+    bool isNoSymptom(){return m_currentState==Ill;}
+    bool isSymptom(){return m_currentState==Symptomatic;}
+    bool isRisk(){return m_currentState==HardCovRisk;}
     bool willBeIll(){return m_nextState==Ill;}
     bool isDead(){return m_nextState==Dead;}
     bool isInfectable();
+
+    bool statGatherer(std::string data2gather);
 
     // pokus nakazeni sama sebe, exposureCoef muze snizit sanci nakazeni
     // neni doresena implementace (hodnoty, a jak dle vakcinace)
@@ -75,6 +81,8 @@ class Human
     void infect();
     // Zabije - uzito pri inicializaci automatu
     void kill(){this->m_nextState=Dead;}
+    // Vyleci nemocneho (i zdraveho a mrtveho :D)
+    void getCured();
 
     // Nastavi infekcni obranu na novy koeficient a odvodi obranu proti mortalite
     void setImmunCoefs(double newCoef);
