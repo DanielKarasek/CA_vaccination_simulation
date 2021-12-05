@@ -25,12 +25,11 @@ void Human::step()
     m_immunityInfectionCoef = ImmunityStartInfection + NormalDis(mt) * ImmunityStartSTD;
     m_immunityMortalityCoef = ImmunityStartMortality + NormalDis(mt) * ImmunityStartSTD;
   }
-  double tmp_vacc = m_vaccinationInfectionCoef;
   decayDefense();
   if (AutoRevaccinate &&
-      tmp_vacc>=RevaccinationInfectionBasedThreshold &&
-      m_vaccinationInfectionCoef<RevaccinationInfectionBasedThreshold
-      && PercentageDis(mt) < RevaccinationSpeed){
+      m_vaccinationInfectionCoef < RevaccinationInfectionBasedThreshold && 
+      m_vaccinationInfectionCoef > 0 &&
+      PercentageDis(mt) < RevaccinationSpeed){
     this->vaccinate(); 
   }
 }

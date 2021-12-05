@@ -3,7 +3,7 @@
 #include "CA.hpp"
 #include "globals.hpp"
 void testDan(){
-  CA automat{1000};
+  CA automat{10};
   // Infikuju random 50 procent lidi, na kazdy zdroj budou tri jeho sousedi ==>
   // prubeh fce: navakcinuj 12 procenta lidi jako zdroje a kazdy pak necha navakcinovat 3 kamose
   automat.infectPercentageInit(0.03, 2);
@@ -17,7 +17,7 @@ void testDan(){
   //std::cout << automat; 
   for (unsigned int i=0;i<100;i++){
     automat.step(false);
-    // automat.printVaccinationMap();
+    automat.printVaccinationMap();
   }
   for (auto val:InfectedCounter){
     std::cout << val << " ";
