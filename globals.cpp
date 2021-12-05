@@ -1,36 +1,37 @@
 #include <random>
 #include "globals.hpp"
 
-double Mortality = 0.02;
+double Mortality = 0.0075;
 
-double VaccineDecayInfection   = 0.9;
-double ImmunityDecayInfection  = 0.9;
-double VaccineDecayMortality   = 0.9;
-double ImmunityDecayMortality  = 0.9; 
+double VaccineDecayInfection   = 0.92;
+double ImmunityDecayInfection  = 0.92;
+double VaccineDecayMortality   = 0.95;
+double ImmunityDecayMortality  = 0.95; 
 
-double VaccineLinearDecayInfection  = 0.02;
+double VaccineLinearDecayInfection  = 0.0258;
 double ImmunityLinearDecayInfection = 0.02;
-double VaccineLinearDecayMortality  = 0.003;
-double ImmunityLinearDecayMortality = 0.02;
+double VaccineLinearDecayMortality  = 0.0009;
+double ImmunityLinearDecayMortality = 0.0009;
 
-double VaccineLinearInfectionThreshold   = 0.85;
-double ImmunityLinearInfectionThreshold  = 0.85;
-double VaccineLinearMortalityThreshold   = 0.85;
-double ImmunityLinearMortalityThreshold  = 0.85;
+double VaccineLinearInfectionThreshold   = 0.7;
+double ImmunityLinearInfectionThreshold  = 0.7;
+double VaccineLinearMortalityThreshold   = 0.7;
+double ImmunityLinearMortalityThreshold  = 0.7;
 
-double VaccineStartInfection  = 0.9;
+double VaccineStartInfection  = 0.83;
 double ImmunityStartInfection = 0.9;
-double VaccineStartMortality  = 0.9;
-double ImmunityStartMortality = 0.9;
+double VaccineStartMortality  = 0.98;
+double ImmunityStartMortality = 0.95;
 
-double VaccineStartSTD = 0.06;
-double ImmunityStartSTD = 0.06;
+double VaccineStartSTD = 0.07;
+double ImmunityStartSTD = 0.07;
 
 double RevaccinationInfectionBasedThreshold = 0.5;
 bool AutoRevaccinate = true;
+double RevaccinationSpeed = 0.8; // if 1, vaccination comes instantly, if 0, vaccination does not come ever, 0.5 is 50 % chance during step
 
-double Contagiousness = 0.45;
-double SuperSpreaderProb = 0.1;
+double Contagiousness = 0.31;
+double SuperSpreaderProb = 0.35;
 double SuperSpreaderMultiCoef = 10;
 
 //Stats

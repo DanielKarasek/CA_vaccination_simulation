@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
   // testDan();
   // return 0;
   using namespace std;
-  cout << "Size of map (NxN)" << endl << "n: ";
+  cout << "Size of map (NxN)" << endl << "N: ";
   unsigned int n;
 
   cin >> n; 
@@ -60,13 +60,13 @@ int main(int argc, char *argv[])
   CA automat{n};
   // Infikuju random 50 procent lidi, na kazdy zdroj budou tri jeho sousedi
   // navakcinuj 12 procenta lidi a kazdy pak necha navakcinovat 3 kamose
-  automat.infectPercentageInit(0.01, 2);
+  automat.infectPercentageInit(0.008, 3);
   // Navakcinuj random 10 procent lidi, na kazdy zdroj budou 2 sousedi  ==>
   // navakcinuj 3.3 procenta lidi a kazdy pak necha navakcinovat 2 kamose
   //- sila vaccinace == 0.8 pro 0.3 poctu vakcinovanych a 0.1 pro 0.7 poctu vakcinovanych
-  automat.vaccinatePercentageInit(0.6, 3, {0.9,0.3}, {0.4,0.6});
+  automat.vaccinatePercentageInit(0.75, 3, {0.9,0.7,0.4}, {0.5,0.4,0.1});
   //stejna semantika jako ^^
-  automat.immunePercentageInit(0.2, 1, {0.8,0.1}, {0.3,0.7});
+  automat.immunePercentageInit(0.3, 1, {0.8,0.2}, {0.3,0.7});
 
   bool run = false;
 
@@ -76,19 +76,33 @@ int main(int argc, char *argv[])
     if (printable){
       std::cout << automat;
     }
+    double originalContag = Contagiousness;
+    double originalSpreaderProb = SuperSpreaderProb;
     for (unsigned int i=0;i<g;i++){
       automat.step(printable);
+      if(InfectedCounter.back()/(n*n) > 0.01)
+      {
+
+        Contagiousness -= 0.04;
+        SuperSpreaderProb -= 0.05;
+      }
+      else
+      {
+        if(Contagiousness <= originalContag)
+        {
+          Contagiousness += 0.04;
+          
+        }
+        if(SuperSpreaderProb <= originalSpreaderProb)
+        {
+          SuperSpreaderProb += 0.05;
+        }
+      }
     }
     //_____________________________________________________________________________________________
     // zakladni dve statistiky vypsane na stdout
-    ofstream myfile;
-    myfile.open ("statistica.txt");
-    myfile << "Deaths Infected" << endl;
+    
     std::cout << "Death counts:\n"; 
-    for(unsigned int i = 0; i < DeathCounter.size() && i < InfectedCounter.size(); i++)
-    {
-      myfile << DeathCounter[i] << " " << InfectedCounter[i] << endl;
-    }
     for (auto val:DeathCounter){
       std::cout << val << " ";
     }
@@ -112,8 +126,18 @@ int main(int argc, char *argv[])
     {
       run = false;
     }
-    myfile.close();
+    
   }while(run);
+
+  ofstream myfile;
+  myfile.open ("statistica.txt");
+  myfile << "Deaths Infected" << endl;
+  
+  for(unsigned int i = 0; i < DeathCounter.size() && i < InfectedCounter.size(); i++)
+  {
+    myfile << DeathCounter[i] << " " << InfectedCounter[i] << endl;
+  }
+  myfile.close();
   
   //___________________________________________________________________________________________
   // Zde vypis jak zhruba to decayu podle zadane hodnoty (mortality coef odvozen od infection coef)

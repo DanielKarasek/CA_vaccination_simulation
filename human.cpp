@@ -29,7 +29,8 @@ void Human::step()
   decayDefense();
   if (AutoRevaccinate &&
       tmp_vacc>=RevaccinationInfectionBasedThreshold &&
-      m_vaccinationInfectionCoef<RevaccinationInfectionBasedThreshold){
+      m_vaccinationInfectionCoef<RevaccinationInfectionBasedThreshold
+      && PercentageDis(mt) < RevaccinationSpeed){
     this->vaccinate(); 
   }
 }

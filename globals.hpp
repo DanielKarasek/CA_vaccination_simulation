@@ -31,6 +31,7 @@ extern double ImmunityStartSTD;
 
 extern double RevaccinationInfectionBasedThreshold;
 extern bool AutoRevaccinate;
+extern double RevaccinationSpeed;
 
 extern double Contagiousness;
 extern double SuperSpreaderProb;
