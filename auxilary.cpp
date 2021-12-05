@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <iostream>
 
-#include "globals.hpp"
+#include "globals.h"
 
 bool checkVectorsLenght(std::vector<double> first, std::vector<double> second){
   return (first.size() == second.size());

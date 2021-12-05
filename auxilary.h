@@ -1,6 +1,6 @@
 #include <vector>
 #include <iostream>
-#include "globals.hpp"
+#include "globals.h"
 
 //zda maji 2 vektory stejnou delku
 bool checkVectorsLenght(std::vector<double> first, std::vector<double> second);

@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "human.hpp"
-#include "globals.hpp"
-#include "auxilary.hpp"
+#include "human.h"
+#include "globals.h"
+#include "auxilary.h"
 
 
 

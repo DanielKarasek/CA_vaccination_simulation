@@ -1,5 +1,5 @@
 #include <random>
-#include "globals.hpp"
+#include "globals.h"
 
 //typedefs
 

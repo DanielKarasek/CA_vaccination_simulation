@@ -4,9 +4,9 @@
 #include <cstdio>   
 #include <string>
 
-#include "CA.hpp"
-#include "globals.hpp"
-#include "auxilary.hpp"
+#include "CA.h"
+#include "globals.h"
+#include "auxilary.h"
 
 CA::CA(unsigned int size): m_size(size){
   // vytvoreni pole

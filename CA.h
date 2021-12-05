@@ -5,8 +5,8 @@
 #include <vector>
 #include <string>
 
-#include "human.hpp"
-#include "globals.hpp"
+#include "human.h"
+#include "globals.h"
 
 typedef std::vector<std::vector<Human>> HumanArr;
 class CA 

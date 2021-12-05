@@ -11,16 +11,16 @@ CA_SIMULATOR: main.o human.o CA.o globals.o auxilary.o
 	$(CC) $(CFLAGS) -o CA_SIMULATOR main.o human.o CA.o globals.o auxilary.o
 	
 
-main.o: main.cpp human.hpp CA.hpp globals.hpp auxilary.hpp
+main.o: main.cpp human.h CA.h globals.h auxilary.h
 	$(CC) $(CFLAGS) -c main.cpp
 
-CA.o: CA.hpp human.hpp globals.hpp auxilary.hpp
+CA.o: CA.h human.h globals.h auxilary.h
 
-human.o: human.hpp globals.hpp auxilary.hpp
+human.o: human.h globals.h auxilary.h
 
-globals.o: globals.hpp
+globals.o: globals.h
 
-auxilary.o: auxilary.hpp
+auxilary.o: auxilary.h
 
 run: $(TARGET)
 	./$(TARGET)

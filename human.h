@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <string>
 
-#include "globals.hpp"
+#include "globals.h"
 
 // enum stavu tridy Human -- přidat 2 stavy, EarlyIll, Symptomatic, HardCovRisk
 enum HumanState{Healthy, Ill, Symptomatic, HardCovRisk, Dead};
