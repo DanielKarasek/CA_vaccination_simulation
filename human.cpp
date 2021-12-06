@@ -55,23 +55,26 @@ void Human::infectedStep(HumanState nextState, double contagiousnessRatio){
   for (auto human : this->m_neighbours)
     human->tryInfect(m_contagiousnessCoeff*contagiousnessRatio);
   if(m_currentState == Ill){
-    continueInfectionChance = 4/(Mortality*std::sqrt(deathLoweringCoef));
+    continueInfectionChance = InfectionStateTransitionRatio/(Mortality*std::sqrt(deathLoweringCoef));
   }
   else if(m_currentState == Symptomatic){
-    continueInfectionChance = 0.25/(Mortality*std::sqrt(deathLoweringCoef));
+    continueInfectionChance = (1/InfectionStateTransitionRatio)/(Mortality*std::sqrt(deathLoweringCoef));
+
   }
   
   continueInfectionChance = Mortality*deathLoweringCoef*continueInfectionChance;
   if (PercentageDis(mt) < continueInfectionChance)
-    this->getCured();
-  else
     m_nextState = nextState;
+  else
+    this->getCured();
 }
 
 void Human::getCured(){
   m_nextState = Healthy;
   m_immunityInfectionCoef = ImmunityStartInfection + NormalDis(mt) * ImmunityStartSTD;
   m_immunityMortalityCoef = ImmunityStartMortality + NormalDis(mt) * ImmunityStartSTD;
+  m_immunityInfectionCoef = clip(m_immunityInfectionCoef, 0, 0.97);
+  m_immunityMortalityCoef = clip(m_immunityMortalityCoef, 0, 0.97);
 }
 
 
@@ -86,11 +89,25 @@ void Human::tryInfect(double exposureCoef)
 void Human::vaccinate(){
   m_vaccinationInfectionCoef = VaccineStartInfection + NormalDis(mt) * VaccineStartSTD;
   m_vaccinationMortalityCoef = VaccineStartMortality + NormalDis(mt) * VaccineStartSTD;
+  m_vaccinationInfectionCoef = clip(m_vaccinationInfectionCoef, 0, 0.97);
+  m_vaccinationMortalityCoef = clip(m_vaccinationMortalityCoef, 0, 0.97);
 }
 
 void Human::infect(){
   if (isInfectable()){
     this->m_nextState=Ill;
+    if (PercentageDis(mt) < SuperSpreaderProb){
+      m_contagiousnessCoeff = Contagiousness * SuperSpreaderMultiCoef;
+    }
+    else{
+      m_contagiousnessCoeff = Contagiousness;
+    }
+  }
+}
+
+void Human::infect(HumanState stage){
+  if (isInfectable()){
+    this->m_nextState=stage;
     if (PercentageDis(mt) < SuperSpreaderProb){
       m_contagiousnessCoeff = Contagiousness * SuperSpreaderMultiCoef;
     }
@@ -166,7 +183,7 @@ int Human::spreadInfection2NeigboursGuaranted(int count)
   {
     if (!human->isIll() && !(human->m_nextState == Ill))
     {
-      human->infect();
+      human->infect(m_nextState);
       countSpread++;
       if (countSpread == count)
         break;

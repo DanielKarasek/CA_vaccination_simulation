@@ -79,6 +79,7 @@ class Human
 
     // Infikuje - uzito pri inicializaci automatu
     void infect();
+    void infect(HumanState stage);
     // Zabije - uzito pri inicializaci automatu
     void kill(){this->m_nextState=Dead;}
     // Vyleci nemocneho (i zdraveho a mrtveho :D)

@@ -5,10 +5,10 @@
 #include "auxilary.h"
 
 void testDan(){
-  CA automat{10};
+  CA automat{1000};
   // Infikuju random 50 procent lidi, na kazdy zdroj budou tri jeho sousedi ==>
   // prubeh fce: navakcinuj 12 procenta lidi jako zdroje a kazdy pak necha navakcinovat 3 kamose
-  automat.infectPercentageInit(0.3, 2);
+  automat.infectPercentageInit(0.3, 4);
   // Navakcinuj random 10 procent lidi, na kazdy zdroj budou 2 sousedi  ==>
   // navakcinuj 3.3 procenta lidi a kazdy pak necha navakcinovat 2 kamose
   //- sila vaccinace == 0.8 pro 0.3 poctu vakcinovanych a 0.1 pro 0.7 poctu vakcinovanych
@@ -46,8 +46,8 @@ void saveForView(){
 
 int main(int argc, char *argv[])
 {
-  //saveForView();
-  //return 0;
+  testDan();
+  return 0;
   using namespace std;
   cout << "Size of map (NxN)" << endl << "N: ";
   unsigned int n;

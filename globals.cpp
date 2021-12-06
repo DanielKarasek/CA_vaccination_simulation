@@ -41,8 +41,10 @@ double Contagiousness = 0.35;
 double SuperSpreaderProb = 0.2;
 double SuperSpreaderMultiCoef = 10;
 
+double InfectionStateTransitionRatio = 4;
 
 std::vector<double> ContagiousnessByState{0.6, 0.3, 0.1};
+std::vector<double> InitInfectionStateProbDistr = {0.6, 0.3, 0.1};
 
 //Stats
 std::vector<int> DeathCounter{};

@@ -37,7 +37,10 @@ extern double Contagiousness;
 extern double SuperSpreaderProb;
 extern double SuperSpreaderMultiCoef;
 
+extern double InfectionStateTransitionRatio;
+
 extern std::vector<double> ContagiousnessByState;
+extern std::vector<double> InitInfectionStateProbDistr;
 
 
 //globalni statistiky

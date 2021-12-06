@@ -190,11 +190,19 @@ void CA::infectPercentageInit(double percentage, int spreadCoeff){
 
   int rand_idx, rand_idx_first, rand_idx_second;
   int extra2spread{};
+  double randomPercentage;
   for (int i=0;i<count2infect;i++){
     rand_idx = v[i];
     rand_idx_first = rand_idx / m_size;
     rand_idx_second = rand_idx % m_size;
-    m_data[rand_idx_first][rand_idx_second].infect();
+    randomPercentage = PercentageDis(mt);
+    if (randomPercentage < InitInfectionStateProbDistr[0])
+      m_data[rand_idx_first][rand_idx_second].infect(Ill);
+    else if (InitInfectionStateProbDistr[0] <= randomPercentage && 
+             randomPercentage < 1-InitInfectionStateProbDistr[2])
+      m_data[rand_idx_first][rand_idx_second].infect(Symptomatic);
+    else 
+      m_data[rand_idx_first][rand_idx_second].infect(HardCovRisk);
   }
 
   if (spreadCoeff != 0){
