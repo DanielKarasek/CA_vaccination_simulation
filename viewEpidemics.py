@@ -29,8 +29,9 @@ def show_video(video, outfile=None, speed=0):
   lut[0, 4, 2] = 0
 
   if outfile is not None:
+    # Tady zmen tu 10 na jine cislo pro jina FPSka, + bacha, ty videa jsou velke mrsky
     out = cv2.VideoWriter(outfile,
-                             cv2.VideoWriter_fourcc(*'MJPG'),
+                             cv2.VideoWriter_fourcc(*'mp4v'),
                              10, (1000, 1000))
   for frame in video:
     frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
@@ -50,6 +51,9 @@ def show_video(video, outfile=None, speed=0):
 if __name__ == "__main__":
   video = load_data("automatVideo.txt")
   # cim vetsi je parametr speed, ten posledni, tim pomalejsi to bude(speed == wait v ms)
-  # pri speed == 0, musis odklikavat sam, Qckem vypnes program
+  # pri speed == 0, musis odklikavat sam,
+  # Qckem vypnes program
   # pri None misto mista pro ulozeni, se jen vymaluje a nic se neuklada
-  show_video(video, "./vysledek.avi", 10)
+  # RYCHLOST TADY NEOVLIVNUJE FPS VIDEA, to je parametr u cv2.VideoWriter uvnitr funkce
+  # u toho je to popsane
+  show_video(video, "./vysledek.mp4", 10)
