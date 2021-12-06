@@ -1,0 +1,11 @@
+# Object files
+*.o
+
+# Executables
+*.exe
+*.out
+*.app
+CA_SIMULATOR
+
+#txt_results
+statistica.txt

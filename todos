@@ -1,0 +1,19 @@
+Rozlozeni nemoci na vic stavu(?-kdyz bude cas)
+Jensen(?-kdyz bude cas)
+
+R-K : s R si hrajem s K taky, zhruba najit jake je
+    : R tabulkova metoda ->
+
+Vakcinace (moderna+pfitzer==stejny prubeh cca):
+  Obecna funkce(?) - inflexni bod
+  Tabulkova(?) - musime najit jak cca vypada ten prubeh 
+  Boostery!
+  Vakcinacni koeficient == cislo imunity
+
+Imunita z nemoci -> 
+  Obecna funkce(?) -> inflexni bod
+  Imunitni koeficient == cislo imunuty po prodelani
+
+Koeficient nahodnych nakazenych
+  %procento ze jeden clovek ma nahodnyho znamyho
+  pridej do neigbours nahodneho cloveka
