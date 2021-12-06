@@ -54,8 +54,13 @@ void Human::infectedStep(HumanState nextState, double contagiousnessRatio){
   double deathLoweringCoef = (1-m_immunityMortalityCoef)*(1-m_vaccinationMortalityCoef);
   for (auto human : this->m_neighbours)
     human->tryInfect(m_contagiousnessCoeff*contagiousnessRatio);
-
-  continueInfectionChance = 1/(Mortality*std::sqrt(deathLoweringCoef));
+  if(m_currentState == Ill){
+    continueInfectionChance = 4/(Mortality*std::sqrt(deathLoweringCoef));
+  }
+  else if(m_currentState == Symptomatic){
+    continueInfectionChance = 0.25/(Mortality*std::sqrt(deathLoweringCoef));
+  }
+  
   continueInfectionChance = Mortality*deathLoweringCoef*continueInfectionChance;
   if (PercentageDis(mt) < continueInfectionChance)
     this->getCured();

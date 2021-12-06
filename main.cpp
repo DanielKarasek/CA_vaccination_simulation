@@ -24,7 +24,7 @@ void testDan(){
 }
 
 void saveForView(){
-  int n = 1000;
+  unsigned int n = 1000;
   CA automat{n};
 
   automat.infectPercentageInit(0.008, 3);
@@ -46,8 +46,8 @@ void saveForView(){
 
 int main(int argc, char *argv[])
 {
-  saveForView();
-  return 0;
+  //saveForView();
+  //return 0;
   using namespace std;
   cout << "Size of map (NxN)" << endl << "N: ";
   unsigned int n;
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
   // Navakcinuj random 10 procent lidi, na kazdy zdroj budou 2 sousedi  ==>
   // navakcinuj 3.3 procenta lidi a kazdy pak necha navakcinovat 2 kamose
   //- sila vaccinace == 0.8 pro 0.3 poctu vakcinovanych a 0.1 pro 0.7 poctu vakcinovanych
-  automat.vaccinatePercentageInit(0.75, 3, {0.9,0.7,0.4}, {0.5,0.4,0.1});
+  automat.vaccinatePercentageInit(0.15, 3, {0.9,0.7,0.4}, {0.5,0.4,0.1});
   //stejna semantika jako ^^
   automat.immunePercentageInit(0.3, 1, {0.8,0.2}, {0.3,0.7});
 
@@ -97,8 +97,8 @@ int main(int argc, char *argv[])
       if(InfectedCounter.back()/(n*n) > 0.01)
       {
 
-        Contagiousness -= 0.04;
-        SuperSpreaderProb -= 0.05;
+        Contagiousness -= 0.03 * NormalDis(mt)*2;
+        SuperSpreaderProb -= 0.04 * NormalDis(mt)*2;
       }
       else
       {
@@ -109,25 +109,40 @@ int main(int argc, char *argv[])
         }
         if(SuperSpreaderProb <= originalSpreaderProb)
         {
-          SuperSpreaderProb += 0.05;
+          SuperSpreaderProb += 0.06;
         }
       }
     }
     //_____________________________________________________________________________________________
     // zakladni dve statistiky vypsane na stdout
     
-    std::cout << "Death counts:\n"; 
+    cout << "Death counts:\n"; 
     for (auto val:DeathCounter){
-      std::cout << val << " ";
+      cout << val << " ";
     }
-    std::cout << std::endl;
+    cout << endl;
 
-    std::cout << "Infected counts:\n";
+    cout << "Infected counts:\n";
     for (auto val:InfectedCounter){
-      std::cout << val << " ";
+      cout << val << " ";
     }
-    std::cout << std::endl;
-    cout << std::endl;
+    cout << endl;
+    cout << "Symptomless counts:\n";
+    for(auto val:NoSymptomCounter){
+      cout << val << " ";
+    }
+    cout << endl;
+    cout << "Symptomatic counts:\n";
+    for(auto val:SymptomCounter){
+      cout << val << " ";
+    }
+    cout << endl;
+    cout << "Risk (intensive care) counts:\n";
+    for(auto val:RiskCounter){
+      cout << val << " ";
+    }
+    cout << endl;
+    cout << endl;
     cout << "Do you wish to continue?" << endl << "Continue [y/n]: ";
     cin >> answer;
     if(answer[0] == 'y')

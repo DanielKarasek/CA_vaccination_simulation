@@ -5,7 +5,7 @@
 
 
 //globalni promenne automatu
-double Mortality = 0.0075;
+double Mortality = 0.005;
 
 //tyhle upraveno treti odmocnina z puvodni hodnoty
 double VaccineDecayInfection   = 0.972588826;
@@ -35,10 +35,10 @@ double ImmunityStartSTD = 0.07;
 double RevaccinationInfectionBasedThreshold = 0.5;
 bool AutoRevaccinate = true;
 //podeleno tremi
-double RevaccinationSpeed = 0.26; // if 1, vaccination comes instantly, if 0, vaccination does not come ever, 0.5 is 50 % chance during step 
+double RevaccinationSpeed = 0.5; // if 1, vaccination comes instantly, if 0, vaccination does not come ever, 0.5 is 50 % chance during step 
 
-double Contagiousness = 0.31;
-double SuperSpreaderProb = 0.35;
+double Contagiousness = 0.35;
+double SuperSpreaderProb = 0.05;
 double SuperSpreaderMultiCoef = 10;
 
 
