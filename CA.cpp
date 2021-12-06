@@ -14,14 +14,13 @@ CA::CA(unsigned int size): m_size(size){
   for (auto &data_row: m_data){
     data_row.resize(size);
   }
-  // propojeni sousedu dle moorova okoli
   connectMoore();
+  connectRandom();
 }
 
 void CA::connectMoore(){
   Human *first, *second, *third, *fourth;
   int row_up, row_down, col_right;
-  int randHumanIdx, firstIdx, secondIdx;
   for (int col=0; col<m_size; col++){
     for (int row=0; row<m_size; row++){
       if (row==0)
@@ -46,6 +45,14 @@ void CA::connectMoore(){
       m_data[row][col].addNeighbourBidirectional(second);
       m_data[row][col].addNeighbourBidirectional(third);
       m_data[row][col].addNeighbourBidirectional(fourth);
+    }
+  }
+}
+
+void CA::connectRandom(){
+  int randHumanIdx, firstIdx, secondIdx;
+  for (int col=0; col<m_size; col++){
+    for (int row=0; row<m_size; row++){
       while (PercentageDis(mt)<RandomNeighbourChance){
         randHumanIdx = IntegerDis(mt);
         if (randHumanIdx >= m_size*m_size)
@@ -118,6 +125,7 @@ void CA::gatherVaccinationStats(){
   MeanVaccinationMortalityCoef.push_back(sumMort/(m_size*m_size));
   TotalVaccinated.push_back(counter);
 }
+
 void CA::gatherImmunityStats(){
   int counter{};
   double immunityInfectionCoef, immunityMortalityCoef;

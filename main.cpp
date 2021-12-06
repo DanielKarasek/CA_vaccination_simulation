@@ -20,7 +20,7 @@ void testDan(){
   for (unsigned int i=0;i<50;i++){
     automat.step(false);
   }
-  printStats(std::cout, 1);
+  printStats(std::cout, false);
 }
 
 void saveForView(){

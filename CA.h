@@ -20,6 +20,7 @@ class CA
     // (lidi si pamatuji kdo je jejich okoli a je jejich responsibilty je infikovat)
     CA(unsigned int size);
     void connectMoore();
+    void connectRandom();
     // semantika vseho je stejna jen pro jiny typ akce (vaccinace, immunizace, infekce)
     // Aplikuj na celkem percentage (0-1) lidi, to se udela tak ze se do zakladu vytvori ale o spreadCoeff-1 lozisek
     // a od tohoto loziska se nakazi spreadCoeff blizkych kontaktu 

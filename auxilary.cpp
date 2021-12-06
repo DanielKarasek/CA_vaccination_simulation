@@ -42,11 +42,11 @@ void printStatVector(std::ostream &os, std::string name, std::vector<T> vector){
   os << std::endl;
 }
 
-//form == 0  vypis do sloupcu
-//form != 0  vypis do radku
-void printStats(std::ostream &os, int form){
+//cols == true  vypis do sloupcu
+//jinak vypis do radku
+void printStats(std::ostream &os, bool cols){
   os << std::setprecision(2);
-  if (form==0){
+  if (form){
     os << "Death Infected NoSymptomCounter SymptomCounter RiskCounter MeanVaccInf MeanVaccMort MeanImmInf MeanImmMort TotalVacc TotalImmune\n";
     for (int i=0;i<InfectedCounter.size();i++){
       os << DeathCounter[i] << " "

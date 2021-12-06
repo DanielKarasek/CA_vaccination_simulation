@@ -4,10 +4,6 @@
 #include "globals.h"
 #include "auxilary.h"
 
-
-
-
-
 Human::Human(const Human& orig){
   this->m_currentState = orig.m_currentState;
   this->m_neighbours = orig.m_neighbours;
