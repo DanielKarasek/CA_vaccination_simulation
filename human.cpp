@@ -41,7 +41,7 @@ void Human::step()
 }
 
 void Human::autoRevactination(){
-  if (this->isIll() &&
+  if (!this->isIll() &&
       m_vaccinationInfectionCoef < RevaccinationInfectionBasedThreshold && 
       m_vaccinationInfectionCoef > 0 &&
       PercentageDis(mt) < RevaccinationSpeed){
