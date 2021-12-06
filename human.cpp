@@ -226,6 +226,21 @@ int Human::spreadVaccine2Neighours(int count)
 }
 
 
+int Human::spread(std::string stuff2spread, int count)
+{
+  if (!stuff2spread.compare("infection"))
+    return spreadInfection2NeigboursGuaranted(count);
+  else if (!stuff2spread.compare("immunity"))
+    return spreadImmun2Neighbours(count);
+  else if (!stuff2spread.compare("vaccination"))
+    return spreadVaccine2Neighours(count);
+  else{
+    std::cout << stuff2spread << " isn't valit variable to spread" << std::endl;
+    return 1;
+  }
+};
+
+
 void Human::decayDefense(){
   this->decayVaccinationInfecion();
   this->decayVaccinationMortality();

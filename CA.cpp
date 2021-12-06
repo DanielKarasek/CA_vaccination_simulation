@@ -95,40 +95,25 @@ void CA::vaccinatePercentageInit(double percentage, int spreadCoeff, std::vector
   
   std::vector<int> v = getShuffledVector(totalPeople);
   
-  int count2vaccinate{};
-  int rand_idx, rand_idx_first, rand_idx_second;
-  int extra2spread{};
+  int count2vaccinate, totalVaccinated{};
+
+  int randIdxFirst, randIdxSecond;
   for (int coefCounter=0; coefCounter < coeffs2set.size(); coefCounter++){
     count2vaccinate = totalPeople*percentage*percentagePerCoeff[coefCounter];
     if (spreadCoeff != 0)
-      count2vaccinate /= spreadCoeff;
-    for (int i=0;i<count2vaccinate;i++){
-      rand_idx = v[i];
-      rand_idx_first = rand_idx / m_size;
-      rand_idx_second = rand_idx % m_size;
-      m_data[rand_idx_first][rand_idx_second].setVaccinCoefs(coeffs2set[coefCounter]+NormalDis(mt)*normalSTD);
-    }
-
-    // rozsir na okoli
-    if (spreadCoeff != 0){
-      for (int i=0;i<count2vaccinate;i++){
-        rand_idx = v[i];
-        rand_idx_first = rand_idx / m_size;
-        rand_idx_second = rand_idx % m_size;
-        extra2spread += m_data[rand_idx_first][rand_idx_second].spreadVaccine2Neighours(spreadCoeff);
-      }
+      count2vaccinate /= (spreadCoeff+1);
     
-    // rozsir na okoli ostatnich pokud se to nekde nepovedlo
-      for (int i=0;i<count2vaccinate;i++){
-        rand_idx = v[i];
-        rand_idx_first = rand_idx / m_size;
-        rand_idx_second = rand_idx % m_size;
-        if (extra2spread == 0)
-          break;
-        extra2spread = m_data[rand_idx_first][rand_idx_second].spreadVaccine2Neighours(extra2spread);
-      }
+    totalVaccinated += count2vaccinate;
+
+    for (int i=0;i<count2vaccinate;i++){
+      randIdxFirst = v[i] / m_size;
+      randIdxSecond = v[i] % m_size;
+      m_data[randIdxFirst][randIdxSecond].setVaccinCoefs(coeffs2set[coefCounter]+NormalDis(mt)*normalSTD);
     }
+    // rozsir na okoli
   }
+  if (spreadCoeff != 0)
+    spreadVariable(v, totalVaccinated, spreadCoeff, "vaccination");
 }
 
 void CA::immunePercentageInit(double percentage, int spreadCoeff, std::vector<double>coeffs2set, std::vector<double>percentagePerCoeff){
@@ -140,41 +125,27 @@ void CA::immunePercentageInit(double percentage, int spreadCoeff, std::vector<do
   int normalSTD = 0.05;
   
   std::vector<int> v = getShuffledVector(totalPeople);
+  
+  int count2immune, totalImmuned{};
 
-  int count2immune{};
-  int rand_idx, rand_idx_first, rand_idx_second;
-  int extra2spread{};
+  int randIdxFirst, randIdxSecond;
   for (int coefCounter=0; coefCounter < coeffs2set.size(); coefCounter++){
     count2immune = totalPeople*percentage*percentagePerCoeff[coefCounter];
     if (spreadCoeff != 0)
-      count2immune /= spreadCoeff;
+      count2immune /= (spreadCoeff+1);
+
+    totalImmuned += count2immune;
 
     for (int i=0;i<count2immune;i++){
-      rand_idx = v[i];
-      rand_idx_first = rand_idx / m_size;
-      rand_idx_second = rand_idx % m_size;
-      m_data[rand_idx_first][rand_idx_second].setImmunCoefs(coeffs2set[coefCounter]+NormalDis(mt)*normalSTD);
+      randIdxFirst = v[i] / m_size;
+      randIdxSecond = v[i] % m_size;
+      m_data[randIdxFirst][randIdxSecond].setImmunCoefs(coeffs2set[coefCounter]+NormalDis(mt)*normalSTD);
     }
     // rozsir na okoli
-    if (spreadCoeff != 0){
-      for (int i=0;i<count2immune;i++){
-        rand_idx = v[i];
-        rand_idx_first = rand_idx / m_size;
-        rand_idx_second = rand_idx % m_size;
-        extra2spread += m_data[rand_idx_first][rand_idx_second].spreadImmun2Neighbours(spreadCoeff);
-      }
-    // rozsir na okoli ostatnich pokud se to nekde nepovedlo
-      for (int i=0;i<count2immune;i++){
-        rand_idx = v[i];
-        rand_idx_first = rand_idx / m_size;
-        rand_idx_second = rand_idx % m_size;
-        if (extra2spread == 0)
-          break;
-        extra2spread = m_data[rand_idx_first][rand_idx_second].spreadImmun2Neighbours(extra2spread);
-      }
-    }
+    
   }
-
+  if (spreadCoeff != 0)
+    spreadVariable(v, totalImmuned, spreadCoeff, "immunity");
   
 }
 
@@ -188,94 +159,46 @@ void CA::infectPercentageInit(double percentage, int spreadCoeff){
   if (spreadCoeff != 0)
       count2infect /= (spreadCoeff+1);
 
-  int rand_idx, rand_idx_first, rand_idx_second;
-  int extra2spread{};
+  int randIdxFirst, randIdxSecond;
   double randomPercentage;
   for (int i=0;i<count2infect;i++){
-    rand_idx = v[i];
-    rand_idx_first = rand_idx / m_size;
-    rand_idx_second = rand_idx % m_size;
+    randIdxFirst = v[i] / m_size;
+    randIdxSecond = v[i] % m_size;
+
     randomPercentage = PercentageDis(mt);
     if (randomPercentage < InitInfectionStateProbDistr[0])
-      m_data[rand_idx_first][rand_idx_second].infect(Ill);
+      m_data[randIdxFirst][randIdxSecond].infect(Ill);
     else if (InitInfectionStateProbDistr[0] <= randomPercentage && 
              randomPercentage < 1-InitInfectionStateProbDistr[2])
-      m_data[rand_idx_first][rand_idx_second].infect(Symptomatic);
+      m_data[randIdxFirst][randIdxSecond].infect(Symptomatic);
     else 
-      m_data[rand_idx_first][rand_idx_second].infect(HardCovRisk);
+      m_data[randIdxFirst][randIdxSecond].infect(HardCovRisk);
   }
 
-  if (spreadCoeff != 0){
-    // rozsir na okoli
-    for (int i=0;i<count2infect;i++){
-      rand_idx = v[i];
-      rand_idx_first = rand_idx / m_size;
-      rand_idx_second = rand_idx % m_size;
-      extra2spread += m_data[rand_idx_first][rand_idx_second].spreadInfection2NeigboursGuaranted(spreadCoeff);
-    }
-  
-    // rozsir na okoli ostatnich pokud se to nekde nepovedlo
-    for (int i=0;i<count2infect;i++){
-      rand_idx = v[i];
-      rand_idx_first = rand_idx / m_size;
-      rand_idx_second = rand_idx % m_size;
-      if (extra2spread == 0)
-        break;
-      extra2spread = m_data[rand_idx_first][rand_idx_second].spreadInfection2NeigboursGuaranted(extra2spread);
-    }
-  }
+  if (spreadCoeff != 0)
+    spreadVariable(v, count2infect, spreadCoeff, "infection");
+
 }
 
-void CA::infectNrandom(int N){
-  int size_squared = m_size*m_size;
-  int rand_idx, rand_idx_first, rand_idx_second;
+void CA::spreadVariable(std::vector<int> &shuffledVector, int countSources, int spreadCoeff, std::string variable){
+  int randIdxFirst, randIdxSecond;
+  int extra2spread{};
+  for (int i=0;i<countSources;i++){
+    randIdxFirst = shuffledVector[i] / m_size;
+    randIdxSecond = shuffledVector[i] % m_size;
+    extra2spread += m_data[randIdxFirst][randIdxSecond].spread(variable, spreadCoeff);
+  }
 
-  // vytvoreni vektoru a pak shuffle abych mohl mit unique random hodnoty
-  std::vector<int> v(size_squared);
-  for (size_t i = 0; i < v.size(); ++i)
-      v[i] = i;
-
-
-  std::shuffle(v.begin(), v.end(), mt);
-
-  // ze zamichaneho vektoru vyberu N prvnich
-  for (int i=0;i<N;i++){
-    rand_idx = v[i];
-    rand_idx_first = rand_idx / m_size;
-    rand_idx_second = rand_idx % m_size;
-    m_data[rand_idx_first][rand_idx_second].infect();
+  // rozsir na okoli ostatnich pokud se to nekde nepovedlo
+  for (int i=0;i<countSources;i++){
+    randIdxFirst = shuffledVector[i] / m_size;
+    randIdxSecond = shuffledVector[i] % m_size;
+    if (extra2spread == 0)
+      break;
+    extra2spread = m_data[randIdxFirst][randIdxSecond].spread(variable, extra2spread);
   }
 }
 
-void CA::infectPercentage(int N){
-  infectNrandom(m_size*m_size*N/100);
-}
- 
-void CA::vaccinateNrandom(int N){
-  int size_squared = m_size*m_size;
-  int rand_idx, rand_idx_first, rand_idx_second;
-
-  // vytvoreni vektoru a pak shuffle abych mohl mit unique random hodnoty
-  std::vector<int> v(size_squared);
-  for (size_t i = 0; i < v.size(); ++i)
-      v[i] = i;
-
-
-  std::shuffle(v.begin(), v.end(), mt);
-
-  // ze zamichaneho vektoru vyberu N prvnich
-  for (int i=0;i<N;i++){
-    rand_idx = v[i];
-    rand_idx = IntegerDis(mt) % size_squared;
-    rand_idx_first = rand_idx / m_size;
-    rand_idx_second = rand_idx % m_size;
-    m_data[rand_idx_first][rand_idx_second].vaccinate();
-  }
-}
-
-void CA::vaccinatePercentage(int N){
-  vaccinateNrandom(m_size*m_size*N/100);
-}
 
 void CA::printVaccinationMap(){
   for (auto &human_row: m_data){

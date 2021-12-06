@@ -39,7 +39,7 @@ double RevaccinationSpeed = 0.5; // if 1, vaccination comes instantly, if 0, vac
 
 double Contagiousness = 0.35;
 double SuperSpreaderProb = 0.2;
-double SuperSpreaderMultiCoef = 10;
+double SuperSpreaderMultiCoef = 20;
 
 double InfectionStateTransitionRatio = 4;
 

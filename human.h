@@ -99,6 +99,7 @@ class Human
     int spreadImmun2Neighbours(int count);
     int spreadVaccine2Neighours(int count);
     int spreadInfection2NeigboursGuaranted(int count);
+    int spread(std::string stuff2spread, int count);
     
   friend std::ostream& operator<<(std::ostream& os, const Human& human);
 };
