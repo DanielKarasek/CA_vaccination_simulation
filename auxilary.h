@@ -12,4 +12,7 @@ std::vector<int> getShuffledVector(int desiredSize);
 
 double clip(double n, double lower, double upper);
 
-void printStats(std::ostream &os);
+void printStats(std::ostream &os, int form);
+
+template <typename T>
+void printStatVector(std::ostream &os, std::string name, std::vector<T> vector);

@@ -15,10 +15,15 @@ CA::CA(unsigned int size): m_size(size){
     data_row.resize(size);
   }
   // propojeni sousedu dle moorova okoli
+  connectMoore();
+}
+
+void CA::connectMoore(){
   Human *first, *second, *third, *fourth;
   int row_up, row_down, col_right;
-  for (int col=0; col<size; col++){
-    for (int row=0; row<size; row++){
+  int randHumanIdx, firstIdx, secondIdx;
+  for (int col=0; col<m_size; col++){
+    for (int row=0; row<m_size; row++){
       if (row==0)
         row_up = m_size-1;
       else
@@ -41,6 +46,15 @@ CA::CA(unsigned int size): m_size(size){
       m_data[row][col].addNeighbourBidirectional(second);
       m_data[row][col].addNeighbourBidirectional(third);
       m_data[row][col].addNeighbourBidirectional(fourth);
+      while (PercentageDis(mt)<RandomNeighbourChance){
+        randHumanIdx = IntegerDis(mt);
+        if (randHumanIdx >= m_size*m_size)
+          randHumanIdx = m_size*m_size-1;
+        firstIdx = randHumanIdx/m_size;
+        secondIdx = randHumanIdx%m_size;
+        
+        m_data[row][col].addNeighbourBidirectional(&(m_data[firstIdx][secondIdx]));
+      }
     }
   }
 }
@@ -71,6 +85,8 @@ void CA::gatherStatistics(){
   gatherSingleStat(SymptomCounter, "Symptom");
   gatherSingleStat(RiskCounter, "Risk");
   gatherSingleStat(DeathCounter, "Dead"); 
+  gatherVaccinationStats();
+  gatherImmunityStats();
 }
 
 void CA::gatherSingleStat(std::vector<int> &statVector, std::string stat2gather){
@@ -84,6 +100,42 @@ void CA::gatherSingleStat(std::vector<int> &statVector, std::string stat2gather)
   statVector.push_back(counter);
 }
 
+void CA::gatherVaccinationStats(){
+  int counter{};
+  double vaccinationInfectionCoef, vaccinationMortalityCoef;
+  double sumInf{}, sumMort{};
+  for (auto &data_row: m_data){
+    for (auto &human: data_row){
+      vaccinationInfectionCoef = human.getVaccinInfectionCoef();
+      vaccinationMortalityCoef = human.getVaccinMortalityCoef();
+      sumInf += vaccinationInfectionCoef;
+      sumMort += vaccinationMortalityCoef;
+      if (vaccinationMortalityCoef > TotalStatVaccinationMortalityThreshold)
+        counter++;
+    }
+  }
+  MeanVaccinationInfectionCoef.push_back(sumInf/(m_size*m_size));
+  MeanVaccinationMortalityCoef.push_back(sumMort/(m_size*m_size));
+  TotalVaccinated.push_back(counter);
+}
+void CA::gatherImmunityStats(){
+  int counter{};
+  double immunityInfectionCoef, immunityMortalityCoef;
+  double sumInf{}, sumMort{};
+  for (auto &data_row: m_data){
+    for (auto &human: data_row){
+      immunityInfectionCoef = human.getImmunInfectionCoef();
+      immunityMortalityCoef = human.getImmunMortalityCoef();
+      sumInf += immunityInfectionCoef;
+      sumMort += immunityMortalityCoef;
+      if (immunityMortalityCoef > TotalStatImmunedMortalityThreshold)
+        counter++;
+    }
+  }
+  MeanImmunityInfectionCoef.push_back(sumInf/(m_size*m_size));
+  MeanImmunityMortalityCoef.push_back(sumMort/(m_size*m_size));
+  TotalImmuned.push_back(counter);
+}
 
 void CA::vaccinatePercentageInit(double percentage, int spreadCoeff, std::vector<double>coeffs2set, std::vector<double>percentagePerCoeff){
   if (!checkVectorsLenght(coeffs2set,percentagePerCoeff)||!summs2one(percentagePerCoeff)){

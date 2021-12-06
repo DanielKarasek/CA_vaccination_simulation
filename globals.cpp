@@ -41,6 +41,10 @@ double Contagiousness = 0.35;
 double SuperSpreaderProb = 0.2;
 double SuperSpreaderMultiCoef = 20;
 
+// NOVE sance ze neighbour bude mit souseda z random mista na pame (dela se ve while loopu takze pak je i tahle hodnot * tahle hodnota)
+// ze bude mit dva sousedy
+double RandomNeighbourChance = 0.2;
+//NOVE pomer pravdepodobnosti transition Ill->symptomatic : symptomatic:HardCovRisk
 double InfectionStateTransitionRatio = 4;
 
 std::vector<double> ContagiousnessByState{0.6, 0.3, 0.1};
@@ -52,6 +56,19 @@ std::vector<int> InfectedCounter{};
 std::vector<int> NoSymptomCounter{};
 std::vector<int> SymptomCounter{};
 std::vector<int> RiskCounter{};
+
+//NOVE
+std::vector<int> TotalVaccinated{};
+std::vector<int> TotalImmuned{};
+
+double TotalStatVaccinationMortalityThreshold{0.6};
+double TotalStatImmunedMortalityThreshold{0.6};
+
+std::vector<double> MeanVaccinationMortalityCoef{};
+std::vector<double> MeanVaccinationInfectionCoef{};
+std::vector<double> MeanImmunityMortalityCoef{};
+std::vector<double> MeanImmunityInfectionCoef{};
+
 
 //Random generators
 std::random_device rd;

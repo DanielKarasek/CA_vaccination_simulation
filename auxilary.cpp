@@ -1,6 +1,8 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <string>
+#include <iomanip>
 
 #include "globals.h"
 
@@ -32,14 +34,46 @@ double clip(double n, double lower, double upper) {
   return std::max(lower, std::min(n, upper));
 }
 
-void printStats(std::ostream &os){
-  os << "Death Infected NoSymptomCounter SymptomCounter RiskCounter\n";
-  for (int i=0;i<InfectedCounter.size();i++){
-    os << DeathCounter[i] << " "
-       << InfectedCounter[i] << " "
-       << NoSymptomCounter[i] << " "
-       << SymptomCounter[i] << " "
-       << RiskCounter[i] << std::endl;
-  }
-
+template <typename T>
+void printStatVector(std::ostream &os, std::string name, std::vector<T> vector){
+  os << name << ":" <<std::endl;
+  for (int i=0;i<vector.size();i++)
+    os  << vector[i] << " ";
+  os << std::endl;
 }
+
+//form == 0  vypis do sloupcu
+//form != 0  vypis do radku
+void printStats(std::ostream &os, int form){
+  os << std::setprecision(2);
+  if (form==0){
+    os << "Death Infected NoSymptomCounter SymptomCounter RiskCounter MeanVaccInf MeanVaccMort MeanImmInf MeanImmMort TotalVacc TotalImmune\n";
+    for (int i=0;i<InfectedCounter.size();i++){
+      os << DeathCounter[i] << " "
+        << InfectedCounter[i] << " "
+        << NoSymptomCounter[i] << " "
+        << SymptomCounter[i] << " "
+        << RiskCounter[i] << " "
+        << MeanVaccinationInfectionCoef[i] << " "
+        << MeanVaccinationMortalityCoef[i] << " "
+        << MeanImmunityInfectionCoef[i] << " "
+        << MeanImmunityMortalityCoef[i] << " "
+        << TotalVaccinated[i] << " "
+        << TotalImmuned[i] << std::endl;
+    }
+  }
+  else{
+    printStatVector<>(os, "Death", DeathCounter);
+    printStatVector<>(os, "Infected", InfectedCounter);
+    printStatVector<>(os, "NoSymptomCounter", NoSymptomCounter);
+    printStatVector<>(os, "SymptomCounter", SymptomCounter);
+    printStatVector<>(os, "RiskCounter", RiskCounter);
+    printStatVector<>(os, "MeanVaccInf", MeanVaccinationInfectionCoef);
+    printStatVector<>(os, "MeanVaccMort", MeanVaccinationMortalityCoef);
+    printStatVector<>(os, "MeanImmInf", MeanImmunityInfectionCoef);
+    printStatVector<>(os, "MeanImmMort", MeanImmunityMortalityCoef);
+    printStatVector<>(os, "TotalVacc", TotalVaccinated);
+    printStatVector<>(os, "TotalImmune", TotalImmuned);
+  }
+}
+

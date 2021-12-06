@@ -19,8 +19,7 @@ class CA
     // Vytvori CA + zakladni propojeni lidi-Human class
     // (lidi si pamatuji kdo je jejich okoli a je jejich responsibilty je infikovat)
     CA(unsigned int size);
-    // natvrdo nainfikuje N random lidi
-
+    void connectMoore();
     // semantika vseho je stejna jen pro jiny typ akce (vaccinace, immunizace, infekce)
     // Aplikuj na celkem percentage (0-1) lidi, to se udela tak ze se do zakladu vytvori ale o spreadCoeff-1 lozisek
     // a od tohoto loziska se nakazi spreadCoeff blizkych kontaktu 
@@ -39,6 +38,9 @@ class CA
     // Nataha statistiky z CA do globalnich promennych
     void gatherStatistics();
     void gatherSingleStat(std::vector<int> &statVector, std::string stat2gather);
+    void gatherVaccinationStats();
+    void gatherImmunityStats();
+    
     
     void printImmunityMap();
     void printVaccinationMap();

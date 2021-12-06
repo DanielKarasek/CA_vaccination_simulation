@@ -37,6 +37,8 @@ extern double Contagiousness;
 extern double SuperSpreaderProb;
 extern double SuperSpreaderMultiCoef;
 
+extern double RandomNeighbourChance;
+
 extern double InfectionStateTransitionRatio;
 
 extern std::vector<double> ContagiousnessByState;
@@ -49,6 +51,17 @@ extern std::vector<int> InfectedCounter;
 extern std::vector<int> NoSymptomCounter;
 extern std::vector<int> SymptomCounter;
 extern std::vector<int> RiskCounter;
+
+extern std::vector<int> TotalVaccinated;
+extern std::vector<int> TotalImmuned;
+
+extern double TotalStatVaccinationMortalityThreshold;
+extern double TotalStatImmunedMortalityThreshold;
+
+extern std::vector<double> MeanVaccinationMortalityCoef;
+extern std::vector<double> MeanVaccinationInfectionCoef;
+extern std::vector<double> MeanImmunityMortalityCoef;
+extern std::vector<double> MeanImmunityInfectionCoef;
 
 //random generatory
 extern std::mt19937 mt;
