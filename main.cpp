@@ -23,10 +23,31 @@ void testDan(){
   printStats(std::cout);
 }
 
+void saveForView(){
+  int n = 1000;
+  CA automat{n};
+
+  automat.infectPercentageInit(0.008, 3);
+  automat.vaccinatePercentageInit(0.75, 3, {0.9,0.7,0.4}, {0.5,0.4,0.1});
+  automat.immunePercentageInit(0.3, 1, {0.8,0.2}, {0.3,0.7});
+
+  std::ofstream myfile;
+  myfile.open ("automatVideo.txt");
+  myfile << n << std::endl;
+  for (unsigned int i=0;i<100;i++){
+    myfile << automat;
+    automat.step(false); 
+  }
+  myfile << automat;
+
+  myfile.close();
+  
+}
+
 int main(int argc, char *argv[])
 {
-  // testDan();
-  // return 0;
+  saveForView();
+  return 0;
   using namespace std;
   cout << "Size of map (NxN)" << endl << "N: ";
   unsigned int n;

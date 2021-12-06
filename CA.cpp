@@ -291,11 +291,11 @@ void CA::printImmunityMap(){
 
 std::ostream& operator<<(std::ostream& os, const CA& automat)
 {
-    os << "Automat is of shape "<<automat.m_size<<"x"<< automat.m_size<< std::endl;
-    os << "Automat state: " << std::endl;
+    // os << "Automat is of shape "<<automat.m_size<<"x"<< automat.m_size<< std::endl;
+    // os << "Automat state: " << std::endl;
     for (auto &data_row: automat.m_data){
       for (auto &human: data_row){
-        os << human<< " ";
+        os << human<< "";
       }
       os << std::endl;
     }
