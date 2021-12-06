@@ -6,7 +6,7 @@
 
 Human::Human(const Human& orig){
   this->m_currentState = orig.m_currentState;
-  this->m_nextState = orig.m_nextState
+  this->m_nextState = orig.m_nextState;
   this->m_neighbours = orig.m_neighbours;
   this->m_vaccinationInfectionCoef = orig.m_vaccinationInfectionCoef;
   this->m_vaccinationMortalityCoef = orig.m_vaccinationMortalityCoef;

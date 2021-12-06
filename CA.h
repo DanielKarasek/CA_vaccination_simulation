@@ -8,10 +8,10 @@
 #include "human.h"
 #include "globals.h"
 
-typedef std::vector<std::vector<Human>> HumanArr;
+
 class CA 
 {
-
+  typedef std::vector<std::vector<Human>> HumanArr;
   protected:
     int m_size;
     HumanArr m_data;
