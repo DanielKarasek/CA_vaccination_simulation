@@ -16,33 +16,38 @@ class CA
     int m_size;
     HumanArr m_data;
   public:
-    // Vytvori CA + zakladni propojeni lidi-Human class
-    // (lidi si pamatuji kdo je jejich okoli a je jejich responsibilty je infikovat)
+    // Vytvori CA pole lidi size x size velke
     CA(unsigned int size);
+    // propoji moorovo okoli
     void connectMoore();
+    // napoji random dle globalni promenne pravdepodobnosti
+    // funguje jako while(random<pravdepodobnost)pridej random cloveka -> jeden muze mit vic random sousedu
     void connectRandom();
-    // semantika vseho je stejna jen pro jiny typ akce (vaccinace, immunizace, infekce)
-    // Aplikuj na celkem percentage (0-1) lidi, to se udela tak ze se do zakladu vytvori ale o spreadCoeff-1 lozisek
-    // a od tohoto loziska se nakazi spreadCoeff blizkych kontaktu 
-    // Dale je vektor ruznych intenzit (0-1 hodnoty) a vektor kolik procent (0-1 hodnoty) z aplikovanych ma danou intenzitu mit
-    // Use case fc(0.5, 4, {0.9, 0.6},{0.2, 0.8}) dej vakcinu 50 procentum lidi (vytvori 10 procent loziska a od kazddeho z nich nakazi dalsi 4 lidi == 50 procent)
-    // 20 procentum z nich dej davku 0.9. 80 precentum z nich dej davku sily 0.6
+
+    // Inicializacni funkce funguji na CELKOVĚ percentage cast populace. Přidaná lokalita pomocí spread koef => nejdříve se vakcinuje/nakazi/immunizuje
+    // menší část zdrojů a ti pak nakazí spreadCoeff kamarádu, aby dohromady dali Percentage část populace.
+    // Coeffs2set a percentage per coeff říkají sílu koeficientů k aplikaci a jaké části z postižených lidí to přiřadit (část vakcinovaných 
+    // má slabší koeficient protože se vakcinovali už třeba v lednu)
     void vaccinatePercentageInit(double percentage, int spreadCoeff, std::vector<double>coeffs2set, std::vector<double>percentagePerCoeff);
     void immunePercentageInit(double percentage, int spreadCoeff, std::vector<double>coeffs2set, std::vector<double>percentagePerCoeff);
     void infectPercentageInit(double percentage, int spreadCoeff);
 
-    void spreadVariable(std::vector<int> &shuffledVector, int sources, int spreadCoeff, std::string variable);
+    // rozšíři vakcinaci/imun/inf, do okolí zdrojů, funkce využitá v ^^,
+    // náhodný vektor je vektor využitý ve funkcích výše k tvorbě zdrojů
+    // variable určuje co šířit (nakaž,imun,vakcinace)
+    void spreadVariable(std::vector<int> &shuffledVector, int sourcesCount, int spreadCoeff, std::string variable);
     
     // updatuje lidi do noveho kroku a pak necha kazdeho cloveka provest krok simulace
-    // (nainfikovat lidi okolo)
+    // nakonec sbira statistiky
     void step(bool verbose);
+
     // Nataha statistiky z CA do globalnich promennych
     void gatherStatistics();
     void gatherSingleStat(std::vector<int> &statVector, std::string stat2gather);
     void gatherVaccinationStats();
     void gatherImmunityStats();
     
-    
+    // Funkce na vymalovani ruznych promennych automatu jako 2d pole
     void printImmunityMap();
     void printVaccinationMap();
     friend std::ostream& operator<<(std::ostream& os, const CA& automat);

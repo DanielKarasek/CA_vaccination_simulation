@@ -6,12 +6,18 @@
 
 Human::Human(const Human& orig){
   this->m_currentState = orig.m_currentState;
+  this->m_nextState = orig.m_nextState
   this->m_neighbours = orig.m_neighbours;
+  this->m_vaccinationInfectionCoef = orig.m_vaccinationInfectionCoef;
+  this->m_vaccinationMortalityCoef = orig.m_vaccinationMortalityCoef;
+  this->m_immunityMortalityCoef = orig.m_immunityMortalityCoef;
+  this->m_immunityInfectionCoef = orig.m_immunityInfectionCoef;
+  this->m_contagiousnessCoeff = orig.m_contagiousnessCoeff;
 }
 
-//todo rozdelit na 3 casti -> contagiousness, mortality
 void Human::step()
 { 
+  // nejdrive udelame nemocenske veci dle casti nemoci (pokud sme)
   if (this->isIll())
   {
     switch (m_currentState){
@@ -31,12 +37,14 @@ void Human::step()
         break;
     }
   }
+  // spadnuti obran a revakcinace
   decayDefense();
   if (AutoRevaccinate)
     this->autoRevactination();
 }
 
 void Human::autoRevactination(){
+  // revakcinujem jen jiz vakcinovane, zdrave a dle rychlosti revakcinace
   if (!this->isIll() &&
       m_vaccinationInfectionCoef < RevaccinationInfectionBasedThreshold && 
       m_vaccinationInfectionCoef > 0 &&
@@ -48,16 +56,20 @@ void Human::autoRevactination(){
 void Human::infectedStep(HumanState nextState, double contagiousnessRatio){
   double continueInfectionChance;
   double deathLoweringCoef = (1-m_immunityMortalityCoef)*(1-m_vaccinationMortalityCoef);
+  // pokusime se nakazit okolni + potencialni random kamarady na mape
   for (auto human : this->m_neighbours)
     human->tryInfect(m_contagiousnessCoeff*contagiousnessRatio);
+  // vypocitame koeficent potřebný k získaní šance přechodu z 1./2. fáze nemoci na následující
+  // aby byla zachovana mortalita: Mortality*(1-immunityMortCoef)*(1-immunityMortCoef)
+  // ty take snizuji sanci prechodu do dalsich stavu nemoci
   if(m_currentState == Ill){
     continueInfectionChance = InfectionStateTransitionRatio/(Mortality*std::sqrt(deathLoweringCoef));
   }
   else if(m_currentState == Symptomatic){
     continueInfectionChance = (1/InfectionStateTransitionRatio)/(Mortality*std::sqrt(deathLoweringCoef));
-
   }
   
+  // dopocitani casti spolecne oboum fazim a random
   continueInfectionChance = Mortality*deathLoweringCoef*continueInfectionChance;
   if (PercentageDis(mt) < continueInfectionChance)
     m_nextState = nextState;
@@ -66,6 +78,7 @@ void Human::infectedStep(HumanState nextState, double contagiousnessRatio){
 }
 
 void Human::getCured(){
+  // Pokud se vylecime z nemoci ziskame imunitu
   m_nextState = Healthy;
   m_immunityInfectionCoef = ImmunityStartInfection + NormalDis(mt) * ImmunityStartSTD;
   m_immunityMortalityCoef = ImmunityStartMortality + NormalDis(mt) * ImmunityStartSTD;
@@ -76,6 +89,8 @@ void Human::getCured(){
 
 void Human::tryInfect(double exposureCoef)
 {
+  // infektujem jen pokud to jde
+  // vzorecek pro sanci je sila prsku*sila obrany vakcinaci*sila obrany imunitou
   if (this->isInfectable() &&
       PercentageDis(mt) < exposureCoef*(1-m_vaccinationInfectionCoef)*(1-m_immunityInfectionCoef)){
     this->infect();
@@ -129,7 +144,7 @@ bool Human::statGatherer(std::string data2gather){
     return isRisk();
   else if (!data2gather.compare("Dead"))
     return isDead();
-  std::cout <<"err";
+  std::cout << "err spatna hodnota Human::statGatherer: " << data2gather << std::endl;
   return false;
 }
 
@@ -143,6 +158,8 @@ void Human::setImmunCoefs(double newCoef){
   newCoef = clip(newCoef, 0.01, 0.97);
   m_immunityInfectionCoef = newCoef;
   int count{};
+  // dopocitame kolik kroku by u pocatecnim nastaveni immunityInfection ubehlo
+  // abychom ziskali newCoef, tolik kroku aplikujeme na immunityMortality s standartni pocatecni hodnotou
   if (newCoef > ImmunityLinearInfectionThreshold){
     count = ceil((newCoef - ImmunityStartInfection)/ImmunityLinearDecayInfection);
   }
@@ -159,6 +176,8 @@ void Human::setVaccinCoefs(double newCoef){
   newCoef = clip(newCoef, 0.01, 0.97);
   m_vaccinationInfectionCoef = newCoef;
   int count{};
+  // dopocitame kolik kroku by u pocatecnim nastaveni vaccinationInfection ubehlo
+  // abychom ziskali newCoef, tolik kroku aplikujeme na vaccinationMortality s standartni pocatecni hodnotou
   if (newCoef > VaccineLinearInfectionThreshold){
     count = ceil((newCoef - VaccineStartInfection)/VaccineLinearDecayInfection);
   }
@@ -174,7 +193,6 @@ void Human::setVaccinCoefs(double newCoef){
 int Human::spreadInfection2NeigboursGuaranted(int count)
 {
   int countSpread{};
-  double normalSTD = 0.1;
   for (auto human : m_neighbours)
   {
     if (!human->isIll() && !(human->m_nextState == Ill))
