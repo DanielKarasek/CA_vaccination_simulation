@@ -38,7 +38,7 @@ bool AutoRevaccinate = true;
 double RevaccinationSpeed = 0.5; // if 1, vaccination comes instantly, if 0, vaccination does not come ever, 0.5 is 50 % chance during step 
 
 double Contagiousness = 0.35;
-double SuperSpreaderProb = 0.05;
+double SuperSpreaderProb = 0.2;
 double SuperSpreaderMultiCoef = 10;
 
 
