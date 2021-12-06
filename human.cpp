@@ -140,7 +140,7 @@ void Human::addNeighbourBidirectional(Human *newNeighbour)
 }
 
 void Human::setImmunCoefs(double newCoef){
-  newCoef = clip(newCoef, 0.01, 1);
+  newCoef = clip(newCoef, 0.01, 0.97);
   m_immunityInfectionCoef = newCoef;
   int count{};
   if (newCoef > ImmunityLinearInfectionThreshold){
@@ -156,7 +156,7 @@ void Human::setImmunCoefs(double newCoef){
 }
 
 void Human::setVaccinCoefs(double newCoef){
-  newCoef = clip(newCoef, 0.01, 1);
+  newCoef = clip(newCoef, 0.01, 0.97);
   m_vaccinationInfectionCoef = newCoef;
   int count{};
   if (newCoef > VaccineLinearInfectionThreshold){
@@ -191,7 +191,7 @@ int Human::spreadInfection2NeigboursGuaranted(int count)
 int Human::spreadImmun2Neighbours(int count)
 {
   int countSpread{};
-  double normalSTD = 0.05;
+  double normalSTD = ImmunityStartSTD;
   for (auto human : m_neighbours)
   {
     if (human->getImmunInfectionCoef() == 0)
@@ -207,7 +207,7 @@ int Human::spreadImmun2Neighbours(int count)
 int Human::spreadVaccine2Neighours(int count)
 {
   int countSpread{};
-  double normalSTD = 0.05;
+  double normalSTD = VaccineStartSTD;
   for (auto human : m_neighbours)
   {
     if (human->getVaccinInfectionCoef() == 0)

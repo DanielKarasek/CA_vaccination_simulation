@@ -151,7 +151,7 @@ void CA::vaccinatePercentageInit(double percentage, int spreadCoeff, std::vector
     return;
   }
   int totalPeople = m_size*m_size;
-  int normalSTD = 0.05;
+  int normalSTD = VaccineStartSTD;
   
   std::vector<int> v = getShuffledVector(totalPeople);
   
@@ -182,7 +182,7 @@ void CA::immunePercentageInit(double percentage, int spreadCoeff, std::vector<do
     return;
   }
   int totalPeople = m_size*m_size;
-  int normalSTD = 0.05;
+  int normalSTD = ImmunityStartSTD;
   
   std::vector<int> v = getShuffledVector(totalPeople);
   

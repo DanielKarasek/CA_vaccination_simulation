@@ -46,7 +46,7 @@ void printStatVector(std::ostream &os, std::string name, std::vector<T> vector){
 //jinak vypis do radku
 void printStats(std::ostream &os, bool cols){
   os << std::setprecision(2);
-  if (form){
+  if (cols){
     os << "Death Infected NoSymptomCounter SymptomCounter RiskCounter MeanVaccInf MeanVaccMort MeanImmInf MeanImmMort TotalVacc TotalImmune\n";
     for (int i=0;i<InfectedCounter.size();i++){
       os << DeathCounter[i] << " "
