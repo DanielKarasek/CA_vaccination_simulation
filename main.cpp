@@ -46,8 +46,8 @@ void saveForView(){
 
 int main(int argc, char *argv[])
 {
-  testDan();
-  return 0;
+  //testDan();
+  //return 0;
   using namespace std;
   cout << "Size of map (NxN)" << endl << "N: ";
   unsigned int n;
@@ -78,9 +78,9 @@ int main(int argc, char *argv[])
   // Navakcinuj random 10 procent lidi, na kazdy zdroj budou 2 sousedi  ==>
   // navakcinuj 3.3 procenta lidi a kazdy pak necha navakcinovat 2 kamose
   //- sila vaccinace == 0.8 pro 0.3 poctu vakcinovanych a 0.1 pro 0.7 poctu vakcinovanych
-  automat.vaccinatePercentageInit(0.15, 3, {0.9,0.7,0.4}, {0.5,0.4,0.1});
+  automat.vaccinatePercentageInit(0.75, 3, {0.9,0.7,0.4}, {0.4,0.4,0.2});
   //stejna semantika jako ^^
-  automat.immunePercentageInit(0.3, 1, {0.8,0.2}, {0.3,0.7});
+  automat.immunePercentageInit(0.15, 2, {0.8,0.3}, {0.3,0.7});
 
   bool run = false;
 
@@ -97,19 +97,19 @@ int main(int argc, char *argv[])
       if(InfectedCounter.back()/(n*n) > 0.01)
       {
 
-        Contagiousness -= 0.03 * NormalDis(mt)*2;
-        SuperSpreaderProb -= 0.04 * NormalDis(mt)*2;
+        Contagiousness -= 0.0045 * NormalDis(mt);
+        SuperSpreaderProb -= 0.0045 * NormalDis(mt);
       }
       else
       {
         if(Contagiousness <= originalContag)
         {
-          Contagiousness += 0.04;
+          Contagiousness += 0.005;
           
         }
         if(SuperSpreaderProb <= originalSpreaderProb)
         {
-          SuperSpreaderProb += 0.06;
+          SuperSpreaderProb += 0.005;
         }
       }
     }
@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
       cout << val << " ";
     }
     cout << endl;
-    cout << "Risk (intensive care) counts:\n";
+    cout << "Risk (can die) counts:\n";
     for(auto val:RiskCounter){
       cout << val << " ";
     }
