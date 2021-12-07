@@ -5,7 +5,7 @@
 
 
 //globalni promenne automatu
-double Mortality = 0.004;
+double Mortality = 0.0062;
 
 
 double VaccineDecayInfection   = 0.98;
@@ -15,7 +15,7 @@ double ImmunityDecayMortality  = 0.98;
 
 double VaccineLinearDecayInfection  = 0.0099;
 double ImmunityLinearDecayInfection = 0.0037;
-double VaccineLinearDecayMortality  = 0.003;
+double VaccineLinearDecayMortality  = 0.005;
 double ImmunityLinearDecayMortality = 0.0034;
 
 double VaccineLinearInfectionThreshold   = 0.4;
@@ -31,12 +31,12 @@ double ImmunityStartMortality = 0.95;
 double VaccineStartSTD = 0.07;
 double ImmunityStartSTD = 0.07;
 
-double RevaccinationInfectionBasedThreshold = 0.4;
+double RevaccinationInfectionBasedThreshold = 0.3;
 bool AutoRevaccinate = true;
 //podeleno tremi
 double RevaccinationSpeed = 0.5; // if 1, vaccination comes instantly, if 0, vaccination does not come ever, 0.5 is 50 % chance during step 
 
-double Contagiousness = 0.22;
+double Contagiousness = 0.33;
 double SuperSpreaderProb = 0.15;
 double SuperSpreaderMultiCoef = 10;
 

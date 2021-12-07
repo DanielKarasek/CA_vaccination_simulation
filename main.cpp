@@ -14,7 +14,7 @@ void testDan(){
   //- sila vaccinace == 0.8 pro 0.3 poctu vakcinovanych a 0.1 pro 0.7 poctu vakcinovanych
   automat.vaccinatePercentageInit(0.6, 3, {0.9,0.3}, {0.4,0.6});
   //stejna semantika jako ^^
-  automat.immunePercentageInit(0.2, 1, {0.8,0.1}, {0.3,0.7});
+  automat.immunePercentageInit(0.1, 1, {0.8,0.4}, {0.3,0.7});
 
   //std::cout << automat; 
   for (unsigned int i=0;i<50;i++){
@@ -28,7 +28,7 @@ void saveForView(){
   CA automat{n};
 
   automat.infectPercentageInit(0.008, 3);
-  automat.vaccinatePercentageInit(0.75, 3, {0.9,0.7,0.4}, {0.5,0.4,0.1});
+  automat.vaccinatePercentageInit(0.75, 3, {0.9,0.7,0.4}, {0.4,0.4,0.2});
   automat.immunePercentageInit(0.3, 1, {0.8,0.2}, {0.3,0.7});
 
   std::ofstream myfile;
@@ -78,9 +78,9 @@ int main(int argc, char *argv[])
   // Navakcinuj random 10 procent lidi, na kazdy zdroj budou 2 sousedi  ==>
   // navakcinuj 3.3 procenta lidi a kazdy pak necha navakcinovat 2 kamose
   //- sila vaccinace == 0.8 pro 0.3 poctu vakcinovanych a 0.1 pro 0.7 poctu vakcinovanych
-  automat.vaccinatePercentageInit(0.75, 3, {0.9,0.7,0.4}, {0.4,0.4,0.2});
+  automat.vaccinatePercentageInit(0.75, 3, {0.9,0.7,0.4}, {0.9,0.05,0.05});
   //stejna semantika jako ^^
-  automat.immunePercentageInit(0.15, 2, {0.8,0.3}, {0.3,0.7});
+  automat.immunePercentageInit(0.2, 2, {0.8,0.3}, {0.3,0.7});
 
   bool run = false;
 
@@ -97,8 +97,8 @@ int main(int argc, char *argv[])
       if(InfectedCounter.back()/(n*n) > 0.01)
       {
 
-        Contagiousness -= 0.0045 * NormalDis(mt);
-        SuperSpreaderProb -= 0.0045 * NormalDis(mt);
+        Contagiousness -= 0.0065 * NormalDis(mt);
+        SuperSpreaderProb -= 0.0055 * NormalDis(mt);
       }
       else
       {
