@@ -5,7 +5,7 @@
 
 
 //globalni promenne automatu
-double Mortality = 0.0062;
+double Mortality = 0.005;
 
 
 double VaccineDecayInfection   = 0.98;
@@ -36,8 +36,8 @@ bool AutoRevaccinate = true;
 //podeleno tremi
 double RevaccinationSpeed = 0.5; // if 1, vaccination comes instantly, if 0, vaccination does not come ever, 0.5 is 50 % chance during step 
 
-double Contagiousness = 0.33;
-double SuperSpreaderProb = 0.15;
+double Contagiousness = 0.25;
+double SuperSpreaderProb = 0.1;
 double SuperSpreaderMultiCoef = 10;
 
 // NOVE sance ze neighbour bude mit souseda z random mista na pame (dela se ve while loopu takze pak je i tahle hodnot * tahle hodnota)

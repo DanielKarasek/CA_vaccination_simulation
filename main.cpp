@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
   // Navakcinuj random 10 procent lidi, na kazdy zdroj budou 2 sousedi  ==>
   // navakcinuj 3.3 procenta lidi a kazdy pak necha navakcinovat 2 kamose
   //- sila vaccinace == 0.8 pro 0.3 poctu vakcinovanych a 0.1 pro 0.7 poctu vakcinovanych
-  automat.vaccinatePercentageInit(0.75, 3, {0.9,0.7,0.4}, {0.9,0.05,0.05});
+  automat.vaccinatePercentageInit(0.75, 3, {0.9,0.7,0.4}, {0.4,0.4,0.2});
   //stejna semantika jako ^^
   automat.immunePercentageInit(0.2, 2, {0.8,0.3}, {0.3,0.7});
 
