@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
   unsigned int n;
 
   cin >> n; 
-
+  
   cout << "Number of generations to simulate" << endl << "g: ";
   
   unsigned int g;

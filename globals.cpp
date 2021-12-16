@@ -31,7 +31,7 @@ double ImmunityStartMortality = 0.95;
 double VaccineStartSTD = 0.07;
 double ImmunityStartSTD = 0.07;
 
-double RevaccinationInfectionBasedThreshold = 0.3;
+double RevaccinationInfectionBasedThreshold = 0.05;
 bool AutoRevaccinate = true;
 //podeleno tremi
 double RevaccinationSpeed = 0.5; // if 1, vaccination comes instantly, if 0, vaccination does not come ever, 0.5 is 50 % chance during step 
