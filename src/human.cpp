@@ -4,16 +4,6 @@
 #include "globals.h"
 #include "auxilary.h"
 
-Human::Human(const Human& orig){
-  this->m_currentState = orig.m_currentState;
-  this->m_nextState = orig.m_nextState;
-  this->m_neighbours = orig.m_neighbours;
-  this->m_vaccinationInfectionCoef = orig.m_vaccinationInfectionCoef;
-  this->m_vaccinationMortalityCoef = orig.m_vaccinationMortalityCoef;
-  this->m_immunityMortalityCoef = orig.m_immunityMortalityCoef;
-  this->m_immunityInfectionCoef = orig.m_immunityInfectionCoef;
-  this->m_contagiousnessCoeff = orig.m_contagiousnessCoeff;
-}
 
 void Human::step()
 { 
@@ -35,6 +25,8 @@ void Human::step()
         else
           this->getCured();
         break;
+      default:
+        std::cout << "??? HUMAN STEP STRANGE STATE\n";
     }
   }
   // spadnuti obran a revakcinace
@@ -252,7 +244,7 @@ int Human::spread(std::string stuff2spread, int count)
     std::cout << stuff2spread << " isn't valit variable to spread" << std::endl;
     return 1;
   }
-};
+}
 
 
 void Human::decayDefense(){
@@ -291,19 +283,19 @@ void Human::decayImmunityMortality(){
 
 std::ostream& operator<<(std::ostream& os, const Human& human){
   switch (human.m_currentState){
-    case Healthy:
+    case Human::Healthy:
       os << "H";
       break;
-    case Dead:
+    case Human::Dead:
       os << "D";
       break;
-    case Ill:
+    case Human::Ill:
       os << "1";
       break;
-    case Symptomatic:
+    case Human::Symptomatic:
       os << "S";
       break;
-    case HardCovRisk:
+    case Human::HardCovRisk:
       os << "X";
       break;
   }

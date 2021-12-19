@@ -17,7 +17,7 @@ class CA
     HumanArr m_data;
   public:
     // Vytvori CA pole lidi size x size velke
-    CA(unsigned int size);
+    CA(int size);
     // propoji moorovo okoli
     void connectMoore();
     // napoji random dle globalni promenne pravdepodobnosti

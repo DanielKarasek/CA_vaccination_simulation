@@ -8,7 +8,7 @@
 #include "globals.h"
 #include "auxilary.h"
 
-CA::CA(unsigned int size): m_size(size){
+CA::CA(int size): m_size(size){
   // vytvoreni pole
   m_data.resize(size);
   for (auto &data_row: m_data){
@@ -168,7 +168,7 @@ void CA::vaccinatePercentageInit(double percentage, int spreadCoeff, std::vector
   int count2vaccinate, totalVaccinated{};
 
   int randIdxFirst, randIdxSecond;
-  for (int coefCounter=0; coefCounter < coeffs2set.size(); coefCounter++){
+  for (int coefCounter=0; coefCounter < static_cast<int>(coeffs2set.size()); coefCounter++){
     // pro kazdou intenzitu koeficientu vypocitam kolik lidi navakcinovat + si pamatuju
     // kolik jsem vakcinoval celkem
     count2vaccinate = totalPeople*percentage*percentagePerCoeff[coefCounter];
@@ -204,7 +204,7 @@ void CA::immunePercentageInit(double percentage, int spreadCoeff, std::vector<do
   int count2immune, totalImmuned{};
 
   int randIdxFirst, randIdxSecond;
-  for (int coefCounter=0; coefCounter < coeffs2set.size(); coefCounter++){
+  for (int coefCounter=0; coefCounter < static_cast<int>(coeffs2set.size()); coefCounter++){
     // pro kazdou intenzitu koeficientu vypocitam kolik lidi immunizovat + si pamatuju
     // kolik jsem immunizoval celkem
     count2immune = totalPeople*percentage*percentagePerCoeff[coefCounter];
@@ -229,7 +229,6 @@ void CA::immunePercentageInit(double percentage, int spreadCoeff, std::vector<do
 
 void CA::infectPercentageInit(double percentage, int spreadCoeff){
   int totalPeople = m_size*m_size;
-  int normalSTD = 0.1;
   
   //ziskani vektoru ma nahodne prohazene cisla od 0 do totalPeople -> random unique cisla
   std::vector<int> v(getShuffledVector(totalPeople));
@@ -247,12 +246,12 @@ void CA::infectPercentageInit(double percentage, int spreadCoeff){
     // nakazim lidi ruznyma fazema nemoci dle globalniho prob disr. vektoru
     randomPercentage = PercentageDis(mt);
     if (randomPercentage < InitInfectionStateProbDistr[0])
-      m_data[randIdxFirst][randIdxSecond].infect(Ill);
+      m_data[randIdxFirst][randIdxSecond].infect(Human::Ill);
     else if (InitInfectionStateProbDistr[0] <= randomPercentage && 
              randomPercentage < 1-InitInfectionStateProbDistr[2])
-      m_data[randIdxFirst][randIdxSecond].infect(Symptomatic);
+      m_data[randIdxFirst][randIdxSecond].infect(Human::Symptomatic);
     else 
-      m_data[randIdxFirst][randIdxSecond].infect(HardCovRisk);
+      m_data[randIdxFirst][randIdxSecond].infect(Human::HardCovRisk);
   }
   //rozir na okoli
   if (spreadCoeff != 0)

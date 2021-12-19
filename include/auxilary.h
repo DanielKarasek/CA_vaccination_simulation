@@ -19,3 +19,6 @@ template <typename T>
 void printStatVector(std::ostream &os, std::string name, std::vector<T> vector);
 //Vypise vsechny statistiky v radkove nebo sloupcove forme dle prepinace na zvoleny vystup
 void printStats(std::ostream &os, bool cols);
+
+void ignoreline(std::istream &is);
+int getIntOnCondition(std::string text, bool (*fn)(int));

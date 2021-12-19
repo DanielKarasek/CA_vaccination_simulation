@@ -9,37 +9,16 @@
 
 #include "globals.h"
 
-// enum stavu tridy Human Zdravy, 3 faze nemoci a smrt
-enum HumanState{Healthy, Ill, Symptomatic, HardCovRisk, Dead};
 
 
 class Human
-{
-
-  
-  protected:
-    // Soucasny a dalsi stav + seznam sousedu
-    HumanState m_currentState{Healthy};
-    HumanState m_nextState{Healthy};
-    
-    // koeficienty obran
-    double m_vaccinationInfectionCoef{};
-    double m_immunityInfectionCoef{};
-    double m_vaccinationMortalityCoef{};
-    double m_immunityMortalityCoef{};
-
-    // jak infekcni sme pokud sme nakazeni
-    double m_contagiousnessCoeff{};
-
-    // vektor sousedu (primarne moore, ale muze byt i nejaky random v CA)
-    std::vector<Human *> m_neighbours{};
-    
-    // Pridani do seznamu sousedu, bez zpetne vazby (druhy si me nepridava do sveho)
-    void addNeighbourUnidirection(Human *newNeighbour){m_neighbours.push_back(newNeighbour);}
-
+{ 
   public:
+    // enum stavu tridy Human Zdravy, 3 faze nemoci a smrt
+    enum HumanState{Healthy, Ill, Symptomatic, HardCovRisk, Dead};
+
     Human(){}
-    Human(const Human& orig);
+    Human(const Human& orig) = default;
 
     void update_state(){m_currentState = m_nextState;}
 
@@ -113,6 +92,29 @@ class Human
     // vypis cloveka 
     // H-zdravy, 1 - nemocny, S - stage 2 nemocny, X - stage 3 nemocny D - mrtvy
     friend std::ostream& operator<<(std::ostream& os, const Human& human);
+
+  protected:
+
+    // Soucasny a dalsi stav + seznam sousedu
+    HumanState m_currentState{Healthy};
+    HumanState m_nextState{Healthy};
+    
+    // koeficienty obran
+    double m_vaccinationInfectionCoef{};
+    double m_immunityInfectionCoef{};
+    double m_vaccinationMortalityCoef{};
+    double m_immunityMortalityCoef{};
+
+    // jak infekcni sme pokud sme nakazeni
+    double m_contagiousnessCoeff{};
+
+    // vektor sousedu (primarne moore, ale muze byt i nejaky random v CA)
+    std::vector<Human *> m_neighbours{};
+    
+    // Pridani do seznamu sousedu, bez zpetne vazby (druhy si me nepridava do sveho)
+    void addNeighbourUnidirection(Human *newNeighbour){m_neighbours.push_back(newNeighbour);}
+
+
 };
 
 #endif

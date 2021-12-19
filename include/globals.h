@@ -2,7 +2,7 @@
 #define GLOBALS_H
 #include <random>
 #include <vector>
-
+// ZMENIT NA CONSTEXPR + namespace
 //GLOBALNI PROMENNE AUTOMATU
 //Smrtnost celkova pokud neexistuje imunita, vakcinace
 extern double Mortality;
