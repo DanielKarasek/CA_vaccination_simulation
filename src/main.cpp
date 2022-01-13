@@ -62,8 +62,8 @@ int main(int argc, char *argv[])
     if(InfectedCounter.back()/(n*n) > 0.01)
     {
 
-      Contagiousness -= 0.0065 * NormalDis(mt);
-      SuperSpreaderProb -= 0.0055 * NormalDis(mt);
+      Contagiousness -= 0.0065;
+      SuperSpreaderProb -= 0.0055;
     }
     else
     {

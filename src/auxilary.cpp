@@ -47,7 +47,7 @@ void printStatVector(std::ostream &os, std::string name, std::vector<T> vector){
 void printStats(std::ostream &os, bool cols){
   os << std::setprecision(2);
   if (cols){
-    os << "Death Infected NoSymptomCounter SymptomCounter RiskCounter MeanVaccInf MeanVaccMort MeanImmInf MeanImmMort TotalVacc TotalImmune\n";
+    os << "#Death Infected NoSymptomCounter SymptomCounter RiskCounter MeanVaccInf MeanVaccMort MeanImmInf MeanImmMort TotalVacc TotalImmune\n";
     for (int i=0;i<static_cast<int>(InfectedCounter.size());i++){
       os << DeathCounter[i] << " "
         << InfectedCounter[i] << " "

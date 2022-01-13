@@ -1,5 +1,6 @@
 # Object files
 *.o
+*.d
 
 # Executables
 *.exe
@@ -15,3 +16,6 @@ CA_SIMULATOR
 *.avi
 *.mp4
 
+obj
+.vscode
+bin

@@ -1,5 +1,3 @@
-
-
 BIN_DIR = bin
 SRC_DIR = src
 OBJ_DIR = obj
@@ -18,8 +16,6 @@ CPPFLAGS = -Iinclude -MMD -MP
 CXXFLAGS = -Wall -pedantic -g --std=c++2a
 # CXXFLAGS = -Wall -O2
 LDFLAGS = 
-
-
 
 
 .PHONY: clean all run print
